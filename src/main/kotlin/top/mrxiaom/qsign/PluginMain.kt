@@ -38,6 +38,11 @@ object PluginMain : KotlinPlugin(
             basePath.resolve("config.json").readText()
         ).apply { checkIllegal() }
 
+        logger.info("已成功读取签名服务配置")
+        logger.info("  签名服务版本: ${CONFIG.protocol.version}")
+        logger.info("  签名服务QUA: ${CONFIG.protocol.qua}")
+        logger.info("=============================================")
+
         for (protocol in BotConfiguration.MiraiProtocol.values()) {
             val file = basePath.resolve("$protocol.json")
             if (file.exists()) {
