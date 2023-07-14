@@ -12,6 +12,9 @@ import net.mamoe.mirai.utils.BotConfiguration
 import net.mamoe.mirai.utils.hexToBytes
 import net.mamoe.mirai.utils.toUHexString
 import java.io.File
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 object PluginMain : KotlinPlugin(
     JvmPluginDescriptionBuilder(
@@ -38,9 +41,13 @@ object PluginMain : KotlinPlugin(
         for (protocol in BotConfiguration.MiraiProtocol.values()) {
             val file = basePath.resolve("$protocol.json")
             if (file.exists()) {
-                val json = Json.parseToJsonElement(file.readText()).jsonObject
-                protocol.applyProtocolInfo(json)
-                logger.info("已加载 $protocol 协议变更: ${protocol.status()}")
+                kotlin.runCatching {
+                    val json = Json.parseToJsonElement(file.readText()).jsonObject
+                    protocol.applyProtocolInfo(json)
+                    logger.info("已加载 $protocol 协议变更: ${protocol.status()}")
+                }.onFailure {
+                    logger.warning("加载 $protocol 的协议变更时发生一个异常", it)
+                }
             }
         }
 
@@ -69,6 +76,7 @@ private fun BotConfiguration.MiraiProtocol.applyProtocolInfo(json: JsonObject) {
 }
 @Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
 private fun BotConfiguration.MiraiProtocol.status(): String {
-    val impl = net.mamoe.mirai.internal.utils.MiraiProtocolInternal.protocols[this] ?: return "UNKNOWN"
-    return "${impl.buildVer} (${impl.buildTime})"
+    val impl = net.mamoe.mirai.internal.utils.MiraiProtocolInternal.protocols[this] ?: return "INVALID PROTOCOL"
+    val buildTime = SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(Date(impl.buildTime * 1000L))
+    return "${impl.buildVer} ($buildTime)"
 }
