@@ -8,6 +8,8 @@ import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.console.plugin.version
+import net.mamoe.mirai.internal.spi.EncryptService
+import net.mamoe.mirai.utils.Services
 import java.io.File
 
 object PluginMain : KotlinPlugin(
@@ -31,5 +33,7 @@ object PluginMain : KotlinPlugin(
             QSignConfig.serializer(),
             basePath.resolve("config.json").readText()
         ).apply { checkIllegal() }
+
+        QSignService.Factory.register()
     }
 }
