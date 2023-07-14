@@ -50,12 +50,17 @@ class QSignService(
         commandName: String,
         payload: ByteArray
     ): EncryptService.SignResult? {
+        if (commandName == "StatSvc.register") {
+            TODO()
+        }
+        if (commandName !in cmdWhiteList) return null
         TODO("Not yet implemented")
     }
 
 
     companion object {
         private val logger = MiraiLogger.Factory.create(QSignService::class)
+        lateinit var cmdWhiteList: List<String>
     }
     class Factory : EncryptService.Factory {
         override val priority: Int = -1919

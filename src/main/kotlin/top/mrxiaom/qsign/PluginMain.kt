@@ -51,6 +51,8 @@ object PluginMain : KotlinPlugin(
             }
         }
 
+        QSignService.cmdWhiteList = getResource("cmd_whitelist.txt")?.lines() ?: error("`cmd_whitelist.txt` not found.")
+
         QSignService.Factory.register()
     }
 }
