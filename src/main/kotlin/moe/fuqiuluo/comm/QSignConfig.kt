@@ -1,10 +1,10 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 package moe.fuqiuluo.comm
 
-import CONFIG
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
+import top.mrxiaom.qsign.PluginMain.CONFIG
 
 @Serializable
 data class Server(

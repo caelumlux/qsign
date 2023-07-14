@@ -1,6 +1,6 @@
 package moe.fuqiuluo.unidbg.vm
 
-import CONFIG
+import top.mrxiaom.qsign.PluginMain.CONFIG
 import com.github.unidbg.arm.backend.DynarmicFactory
 import com.github.unidbg.arm.backend.Unicorn2Factory
 import com.github.unidbg.linux.android.AndroidEmulatorBuilder

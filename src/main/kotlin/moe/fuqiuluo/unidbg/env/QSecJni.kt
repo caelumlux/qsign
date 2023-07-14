@@ -13,11 +13,11 @@ import moe.fuqiuluo.comm.EnvData
 import moe.fuqiuluo.ext.toHexString
 import moe.fuqiuluo.unidbg.QSecVM
 import moe.fuqiuluo.unidbg.vm.GlobalData
-import org.slf4j.LoggerFactory
+import net.mamoe.mirai.utils.MiraiLogger
 import java.io.File
 import java.util.*
 
-private val logger = LoggerFactory.getLogger(QSecJni::class.java)
+private val logger = MiraiLogger.Factory.create(QSecJni::class.java)
 
 typealias BytesObject = com.github.unidbg.linux.android.dvm.array.ByteArray
 

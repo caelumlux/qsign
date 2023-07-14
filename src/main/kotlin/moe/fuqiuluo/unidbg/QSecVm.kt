@@ -7,7 +7,7 @@ import moe.fuqiuluo.unidbg.env.FileResolver
 import moe.fuqiuluo.unidbg.env.QSecJni
 import moe.fuqiuluo.unidbg.vm.AndroidVM
 import moe.fuqiuluo.unidbg.vm.GlobalData
-import org.slf4j.LoggerFactory
+import net.mamoe.mirai.utils.MiraiLogger
 import java.io.File
 import javax.security.auth.Destroyable
 import kotlin.system.exitProcess
@@ -19,7 +19,7 @@ class QSecVM(
     unicorn: Boolean
 ): Destroyable, AndroidVM("com.tencent.mobileqq", dynarmic, unicorn) {
     companion object {
-        private val logger = LoggerFactory.getLogger(QSecVM::class.java)!!
+        private val logger = MiraiLogger.Factory.create(QSecVM::class.java)
     }
 
     private var destroy: Boolean = false
