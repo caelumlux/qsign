@@ -4,11 +4,10 @@
 [![Releases](https://img.shields.io/github/downloads/MrXiaoM/unidbg-fetch-qsign/total?label=%E4%B8%8B%E8%BD%BD%E9%87%8F&logo=github)](https://github.com/MrXiaoM/unidbg-fetch-qsign/releases)
 [![Stars](https://img.shields.io/github/stars/MrXiaoM/unidbg-fetch-qsign?label=%E6%A0%87%E6%98%9F&logo=github)](https://github.com/MrXiaoM/unidbg-fetch-qsign/stargazers)
 
-通过 Unidbg 获取 QQSign 参数，基于 unidbg-fetch-qsign 修改，仅适用于 mirai。unidbg-fetch-sign 最低从 QQ8.9.33 (不囊括) 开始支持，TIM 不支持。
+通过 Unidbg 获取 QQSign 参数，基于 fuqiuluo/unidbg-fetch-qsign 修改，仅适用于 mirai。unidbg-fetch-sign 最低从 QQ8.9.33 (不囊括) 开始支持，TIM 不支持。
 
 # 切记
 
- - 公共 API 具有高风险可能
  - 请使用与协议对应版本的 libfekit.so 文件
  - QSign 基于 Android 平台，其它平台 Sign 计算的参数不同，不互通（例如：IPad）。
  - 不支持载入 Tim.apk 的 so 文件。
