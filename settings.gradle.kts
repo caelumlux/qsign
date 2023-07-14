@@ -1,2 +1,2 @@
-rootProject.name = "unidbg-fetch-qsign"
+rootProject.name = "qsign"
 
