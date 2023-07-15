@@ -51,3 +51,11 @@
 本仓库提供的 `txlib-pack.zip` 已自带协议，会在加载本插件时将协议信息应用到 mirai。  
 启动 mirai 后检查一下日志输出的`协议版本`与`签名版本`是否一致，  
 使用 `ANDROID_PHONE` 协议登录即可。
+
+# 在 mirai-core 中使用
+
+先想办法引用本插件为依赖，在登录前执行以下代码  
+[kotlin](src/test/kotlin/CoreUsage.kt)  
+[java](src/test/java/CoreUsage.java)
+
+构建的包稍大，投放到网络仓库上下载会很慢，请使用本地依赖。
