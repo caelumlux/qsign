@@ -21,12 +21,12 @@
   - [ ] check for possible deadlock issue
 - [x] encryptTlv-customEnergy
 - [ ] qSecurityGetSign
-  - [ ] sign
-  - [ ] request token
+  - [x] sign
+  - [x] request token
   - [ ] check for possible deadlock issue
   - [ ] etc...
 - [ ] test
-  - [ ] login
+  - [x] login
   - [ ] send message
 
 # 部署方法
