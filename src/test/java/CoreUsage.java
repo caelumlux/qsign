@@ -10,7 +10,7 @@ public class CoreUsage {
         QSignService.Factory.basePath = basePath;
 
         // 初始化签名服务，加载配置文件
-        FEBound.initAssertConfig(QSignService.Factory.basePath);
+        FEBound.initAssertConfig(basePath);
         QSignService.Factory.loadConfigFromFile(new File(basePath, "config.json"));
 
         // 设置签名cmd白名单，请改为读取 src/main/resources/cmd_whitelist.txt
