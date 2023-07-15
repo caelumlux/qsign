@@ -27,7 +27,7 @@ object PluginMain : KotlinPlugin(
         val basePath = File(PluginConfig.basePath).also {
             Factory.basePath = it
         }
-        logger.info("Loading QSign v$version")
+        logger.info("Loading QSign v$version (unidbg-fetch-qsign v${BuildConstants.UNIDBG_FETCH_QSIGN_VERSION})")
         logger.info("正在 Mirai ${MiraiConsole.version} 上运行")
         logger.info("签名服务目录: ${basePath.absolutePath}")
 

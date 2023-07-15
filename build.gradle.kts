@@ -6,7 +6,8 @@ plugins {
 }
 
 group = "top.mrxiaom"
-version = "1.1.4"
+version = "1.0.0"
+val versionUnidbgFetchQSign = "1.1.4"
 
 buildConfig {
     className("BuildConstants")
@@ -14,6 +15,7 @@ buildConfig {
     useKotlinOutput()
 
     buildConfigField("String", "VERSION", "\"${project.version}\"")
+    buildConfigField("String", "UNIDBG_FETCH_QSIGN_VERSION", "\"$versionUnidbgFetchQSign\"")
 }
 
 repositories {
@@ -43,5 +45,18 @@ mirai {
 tasks {
     processResources {
         from(zipTree("libs/unidbg-fix.jar"))
+    }
+    create<Zip>("deploy") {
+        group = "build"
+        dependsOn("buildPlugin")
+        setMetadataCharset("utf-8")
+        from(fileTree("txlib")) {
+            into("txlib")
+        }
+        from("build/mirai/${rootProject.name}-${rootProject.version}.mirai2.jar") {
+            into("plugins")
+        }
+        destinationDirectory.set(rootProject.projectDir)
+        archiveFileName.set("${rootProject.name}-${rootProject.version}-all.zip")
     }
 }
