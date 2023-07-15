@@ -29,6 +29,7 @@ dependencies {
     compileOnly("net.mamoe:mirai-core-utils")
     compileOnly("net.mamoe:mirai-console-compiler-common")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.3.3")
+    implementation("org.slf4j:jcl-over-slf4j:2.0.7")
 
     shadow(files("libs/unidbg-fix.jar"))
 
@@ -45,7 +46,6 @@ mirai {
 tasks {
     processResources {
         from(zipTree("libs/unidbg-fix.jar"))
-        exclude("org/apache/commons/logging/impl/LogFactoryImpl.*")
     }
     create<Zip>("deploy") {
         group = "build"

@@ -2,8 +2,6 @@ package top.mrxiaom.qsign
 
 import com.tencent.mobileqq.dt.model.FEBound
 import kotlinx.serialization.json.*
-import moe.fuqiuluo.comm.QSignConfig
-import moe.fuqiuluo.comm.checkIllegal
 import net.mamoe.mirai.console.MiraiConsole
 import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder
