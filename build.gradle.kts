@@ -45,6 +45,7 @@ mirai {
 tasks {
     processResources {
         from(zipTree("libs/unidbg-fix.jar"))
+        exclude("org/apache/commons/logging/impl/LogFactoryImpl.*")
     }
     create<Zip>("deploy") {
         group = "build"
