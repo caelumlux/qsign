@@ -34,6 +34,10 @@
 
 请在 mirai 版本大于或等于 `2.15.0` **正式版**的环境下操作。
 
+> 文件很大，下载可能较慢，可以尝试使用以下工具站进行加速  
+> https://ghproxy.com/  
+> https://github.moeyy.cn/  
+
 到 [Releases](https://github.com/MrXiaoM/unidbg-fetch-qsign/releases) 下载 `qsign-x.x.x-all.zip`，将 `plugins` 和 `txlib` 文件夹解压到 mirai 所在目录。解压后文件夹结构大致情况如下
 ```
 |-bots
