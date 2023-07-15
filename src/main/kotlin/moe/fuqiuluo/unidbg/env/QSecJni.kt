@@ -44,13 +44,13 @@ class QSecJni(
         if (signature == "com/tencent/mobileqq/fe/IFEKitLog->i(Ljava/lang/String;ILjava/lang/String;)V") {
             val tag = vaList.getObjectArg<StringObject>(0)
             val msg = vaList.getObjectArg<StringObject>(2)
-            println(tag.value + "info: " + msg.value)
+            logger.verbose(tag.value + "info: " + msg.value)
             return
         }
         if (signature == "com/tencent/mobileqq/fe/IFEKitLog->e(Ljava/lang/String;ILjava/lang/String;)V") {
             val tag = vaList.getObjectArg<StringObject>(0)
             val msg = vaList.getObjectArg<StringObject>(2)
-            println(tag.value + "error: " + msg.value)
+            logger.verbose(tag.value + "error: " + msg.value)
             return
         }
         if (signature == "com/tencent/mobileqq/channel/ChannelProxy->sendMessage(Ljava/lang/String;[BJ)V") {
@@ -61,7 +61,7 @@ class QSecJni(
 
             if (callbackId == -1L) return
 
-            println("uin = ${global["uin"]}, id = $callbackId, sendPacket(cmd = $cmd, data = $hex)")
+            logger.verbose("uin = ${global["uin"]}, id = $callbackId, sendPacket(cmd = $cmd, data = $hex)")
             (global["PACKET"] as ArrayList<SsoPacket>).add(SsoPacket(cmd, hex, callbackId))
             (global["mutex"] as Mutex).also { if (it.isLocked) it.unlock() }
             return
@@ -172,7 +172,7 @@ class QSecJni(
             val data = vaList.getObjectArg<DvmObject<*>>(1).value as ByteArray
             val result = FEBound.transform(mode, data)
             if (mode == 1)
-                println("FEBound.transform(${data.toHexString()}) => ${result?.toHexString()}")
+                logger.verbose("FEBound.transform(${data.toHexString()}) => ${result?.toHexString()}")
             return BytesObject(vm, result)
         }
         if (signature == "java/lang/ClassLoader->getSystemClassLoader()Ljava/lang/ClassLoader;") {

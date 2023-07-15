@@ -34,9 +34,7 @@ class QSecVM(
             vm.setJni(QSecJni(envData, this, global))
             vm.addNotFoundClass("com/tencent/mobileqq/dt/Dc")
 
-        }.onFailure {
-            it.printStackTrace()
-        }
+        }.onFailure(logger::warning)
     }
 
     fun init() {
@@ -47,7 +45,7 @@ class QSecVM(
             global["DeepSleepDetector"] = DeepSleepDetector()
             this.isInit = true
         }.onFailure {
-            it.printStackTrace()
+            logger.warning(it)
             exitProcess(1)
         }
     }
