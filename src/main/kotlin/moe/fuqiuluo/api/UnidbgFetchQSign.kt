@@ -152,15 +152,15 @@ object UnidbgFetchQSign {
     suspend fun sign(
         cmd: String,
         uin: Long,
-        qua: String,
         seq: Int,
         buffer: ByteArray,
+        qua: String = PluginMain.CONFIG.protocol.version,
         qimei36: String = "",
         androidId: String = "",
         guid: String = ""
     ): Sign {
         val session = initSession(uin) ?: run {
-            if (androidId.isNullOrEmpty() || guid.isNullOrEmpty()) {
+            if (androidId.isEmpty() || guid.isEmpty()) {
                 throw MissingKeyError
             }
             SessionManager.register(
@@ -194,9 +194,9 @@ object UnidbgFetchQSign {
         }
 
         return Sign(
-            sign.token.toHexString(),
-            sign.extra.toHexString(),
-            sign.sign.toHexString(), o3did, list
+            sign.token,
+            sign.extra,
+            sign.sign, o3did, list
         )
     }
     /**
@@ -289,9 +289,9 @@ object UnidbgFetchQSign {
 }
 @Serializable
 data class Sign(
-    val token: String,
-    val extra: String,
-    val sign: String,
+    val token: ByteArray,
+    val extra: ByteArray,
+    val sign: ByteArray,
     val o3did: String,
     val requestCallback: List<SsoPacket>
 )
