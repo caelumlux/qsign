@@ -2,7 +2,10 @@ package top.mrxiaom.qsign
 
 import com.tencent.mobileqq.channel.SsoPacket
 import kotlinx.coroutines.*
+import kotlinx.serialization.json.Json
 import moe.fuqiuluo.api.UnidbgFetchQSign
+import moe.fuqiuluo.comm.QSignConfig
+import moe.fuqiuluo.comm.checkIllegal
 import net.mamoe.mirai.internal.spi.EncryptService
 import net.mamoe.mirai.internal.spi.EncryptServiceContext
 import net.mamoe.mirai.internal.spi.EncryptServiceContext.Companion.KEY_BOT_PROTOCOL
@@ -11,6 +14,7 @@ import net.mamoe.mirai.internal.spi.EncryptServiceContext.Companion.KEY_COMMAND_
 import net.mamoe.mirai.internal.spi.EncryptServiceContext.Companion.KEY_DEVICE_INFO
 import net.mamoe.mirai.internal.spi.EncryptServiceContext.Companion.KEY_QIMEI36
 import net.mamoe.mirai.utils.*
+import java.io.File
 import kotlin.coroutines.CoroutineContext
 
 class QSignService(
@@ -84,7 +88,7 @@ class QSignService(
                 }
             }
         }
-        if (commandName !in cmdWhiteList) return null
+        if (commandName !in Factory.cmdWhiteList) return null
 
         logger.verbose("sign $commandName")
         val data = runBlocking {
@@ -122,15 +126,22 @@ class QSignService(
 
     companion object {
         private val logger = MiraiLogger.Factory.create(QSignService::class)
-        lateinit var cmdWhiteList: List<String>
     }
     class Factory : EncryptService.Factory {
         override val priority: Int = -1919
         companion object {
-            private val supportedProtocol = listOf(
-                BotConfiguration.MiraiProtocol.ANDROID_PHONE,
-                BotConfiguration.MiraiProtocol.ANDROID_PAD
-            )
+            lateinit var supportedProtocol: List<BotConfiguration.MiraiProtocol>
+            lateinit var basePath: File
+            lateinit var CONFIG: QSignConfig
+            lateinit var cmdWhiteList: List<String>
+            @JvmStatic
+            fun loadConfigFromFile(file: File) {
+                CONFIG = Json.decodeFromString(
+                    QSignConfig.serializer(),
+                    file.readText()
+                ).apply { checkIllegal() }
+            }
+            @JvmStatic
             fun register() {
                 Services.register(EncryptService.Factory::class.qualifiedName!!, Factory::class.qualifiedName!!, ::Factory)
                 logger.info("已注册加密算法提供服务")

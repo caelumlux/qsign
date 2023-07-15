@@ -4,7 +4,7 @@ package moe.fuqiuluo.comm
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
-import top.mrxiaom.qsign.PluginMain.CONFIG
+import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
 
 @Serializable
 data class Server(

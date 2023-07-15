@@ -1,16 +1,16 @@
 package moe.fuqiuluo.unidbg.session
 
-import top.mrxiaom.qsign.PluginMain.CONFIG
+import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
 import com.tencent.mobileqq.channel.SsoPacket
 import com.tencent.mobileqq.fe.FEKit
 import kotlinx.coroutines.sync.Mutex
 import moe.fuqiuluo.comm.EnvData
 import moe.fuqiuluo.unidbg.QSecVM
-import top.mrxiaom.qsign.PluginMain
+import top.mrxiaom.qsign.QSignService
 
 class Session(envData: EnvData) {
     internal val vm: QSecVM =
-        QSecVM(PluginMain.basePath, envData, CONFIG.unidbg.dynarmic, CONFIG.unidbg.unicorn)
+        QSecVM(QSignService.Factory.basePath, envData, CONFIG.unidbg.dynarmic, CONFIG.unidbg.unicorn)
     internal val mutex = Mutex()
 
     init {

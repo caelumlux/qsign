@@ -14,7 +14,7 @@ import moe.fuqiuluo.unidbg.session.Session
 import moe.fuqiuluo.unidbg.session.SessionManager
 import moe.fuqiuluo.utils.EMPTY_BYTE_ARRAY
 import moe.fuqiuluo.utils.MD5
-import top.mrxiaom.qsign.PluginMain
+import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
 import java.lang.RuntimeException
 import java.nio.ByteBuffer
 import kotlin.concurrent.timer
@@ -28,9 +28,9 @@ object UnidbgFetchQSign {
                     "",
                     "",
                     "",
-                    PluginMain.CONFIG.protocol.qua,
-                    PluginMain.CONFIG.protocol.version,
-                    PluginMain.CONFIG.protocol.code
+                    CONFIG.protocol.qua,
+                    CONFIG.protocol.version,
+                    CONFIG.protocol.code
                 )
             )
             findSession(uin)
@@ -55,9 +55,9 @@ object UnidbgFetchQSign {
                     "",
                     "",
                     "",
-                    PluginMain.CONFIG.protocol.qua,
-                    PluginMain.CONFIG.protocol.version,
-                    PluginMain.CONFIG.protocol.code
+                    CONFIG.protocol.qua,
+                    CONFIG.protocol.version,
+                    CONFIG.protocol.code
                 )
             )
             findSession(uin)
@@ -154,7 +154,7 @@ object UnidbgFetchQSign {
         uin: Long,
         seq: Int,
         buffer: ByteArray,
-        qua: String = PluginMain.CONFIG.protocol.version,
+        qua: String = CONFIG.protocol.version,
         qimei36: String = "",
         androidId: String = "",
         guid: String = ""
@@ -170,8 +170,8 @@ object UnidbgFetchQSign {
                     guid,
                     qimei36,
                     qua,
-                    PluginMain.CONFIG.protocol.version,
-                    PluginMain.CONFIG.protocol.code
+                    CONFIG.protocol.version,
+                    CONFIG.protocol.code
                 )
             )
             findSession(uin)
@@ -212,9 +212,9 @@ object UnidbgFetchQSign {
         overrideVersion: String? = null,
         overrideCode: String? = null
     ): Boolean {
-        val qua = overrideQua ?: PluginMain.CONFIG.protocol.qua
-        val version = overrideVersion ?: PluginMain.CONFIG.protocol.version
-        val code = overrideCode ?: PluginMain.CONFIG.protocol.code
+        val qua = overrideQua ?: CONFIG.protocol.qua
+        val version = overrideVersion ?: CONFIG.protocol.version
+        val code = overrideCode ?: CONFIG.protocol.code
 
         val hasRegister = uin in SessionManager
         SessionManager.register(EnvData(uin, androidId, guid, qimei36, qua, version, code))
@@ -270,7 +270,7 @@ object UnidbgFetchQSign {
     }
 
     fun initSession(uin: Long): Session? {
-        return SessionManager[uin] ?: if (!PluginMain.CONFIG.autoRegister) {
+        return SessionManager[uin] ?: if (!CONFIG.autoRegister) {
             throw SessionNotFoundError
         } else {
             null
