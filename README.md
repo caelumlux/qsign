@@ -28,7 +28,8 @@
   - [ ] etc...
 - [ ] test
   - [x] login
-  - [ ] send message
+  - [x] send message
+  - [ ] etc...
 
 # 部署方法
 
