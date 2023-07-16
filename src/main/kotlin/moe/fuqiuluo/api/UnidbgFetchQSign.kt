@@ -14,25 +14,20 @@ import moe.fuqiuluo.unidbg.session.Session
 import moe.fuqiuluo.unidbg.session.SessionManager
 import moe.fuqiuluo.utils.EMPTY_BYTE_ARRAY
 import moe.fuqiuluo.utils.MD5
+import net.mamoe.mirai.utils.toUHexString
 import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
 import java.lang.RuntimeException
 import java.nio.ByteBuffer
 import kotlin.concurrent.timer
 
 object UnidbgFetchQSign {
-    suspend fun customEnergy(uin: Long, cmd: String, salt: ByteArray): ByteArray {
+    suspend fun customEnergy(uin: Long, cmd: String, salt: ByteArray, androidId: String? = null, guid: ByteArray? = null): ByteArray {
         val session = initSession(uin) ?: run {
-            SessionManager.register(
-                EnvData(
-                    uin,
-                    "",
-                    "",
-                    "",
-                    CONFIG.protocol.qua,
-                    CONFIG.protocol.version,
-                    CONFIG.protocol.code
-                )
-            )
+            if (androidId.isNullOrEmpty() || guid == null) {
+                throw MissingKeyError
+            }
+            SessionManager.register(EnvData(uin, androidId, guid.toUHexString("").lowercase(), "", CONFIG.protocol.qua, CONFIG.protocol.version, CONFIG.protocol.code))
+
             findSession(uin)
         }
 
@@ -46,20 +41,14 @@ object UnidbgFetchQSign {
         uin: Long, cmd: String,
         modeString: String? = null,
         version: String? = null, guid: ByteArray? = null,
+        androidId: String? = null,
         phone: ByteArray? = null, receipt: ByteArray? = null,
         code: String? = null): ByteArray {
         val session = initSession(uin) ?: run {
-            SessionManager.register(
-                EnvData(
-                    uin,
-                    "",
-                    "",
-                    "",
-                    CONFIG.protocol.qua,
-                    CONFIG.protocol.version,
-                    CONFIG.protocol.code
-                )
-            )
+            if (androidId.isNullOrEmpty() || guid == null) {
+                throw MissingKeyError
+            }
+            SessionManager.register(EnvData(uin, androidId, guid.toUHexString("").lowercase(), "", CONFIG.protocol.qua, CONFIG.protocol.version, CONFIG.protocol.code))
             findSession(uin)
         }
 
@@ -163,17 +152,7 @@ object UnidbgFetchQSign {
             if (androidId.isEmpty() || guid.isEmpty()) {
                 throw MissingKeyError
             }
-            SessionManager.register(
-                EnvData(
-                    uin,
-                    androidId,
-                    guid,
-                    qimei36,
-                    qua,
-                    CONFIG.protocol.version,
-                    CONFIG.protocol.code
-                )
-            )
+            SessionManager.register(EnvData(uin, androidId, guid.lowercase(), qimei36, qua, CONFIG.protocol.version, CONFIG.protocol.code))
             findSession(uin)
         }
         val vm = session.vm

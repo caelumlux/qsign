@@ -1,7 +1,7 @@
 # QSign
 
 [![mirai-core/mirai-console 2.15.0+](https://img.shields.io/badge/mirai--core/mirai--console-2.15.0+-green)](https://github.com/mamoe/mirai)
-[![unidbg-fetch-qsign 1.1.4](https://img.shields.io/badge/unidbg--fetch--qsign-1.1.4-yellowgreen)](https://github.com/fuqiuluo/unidbg-fetch-qsign)
+[![unidbg-fetch-qsign 1.1.5](https://img.shields.io/badge/unidbg--fetch--qsign-1.1.5-yellowgreen)](https://github.com/fuqiuluo/unidbg-fetch-qsign)
 [![Releases](https://img.shields.io/github/downloads/MrXiaoM/unidbg-fetch-qsign/total?label=%E4%B8%8B%E8%BD%BD%E9%87%8F&logo=github)](https://github.com/MrXiaoM/unidbg-fetch-qsign/releases)
 [![Stars](https://img.shields.io/github/stars/MrXiaoM/unidbg-fetch-qsign?label=%E6%A0%87%E6%98%9F&logo=github)](https://github.com/MrXiaoM/unidbg-fetch-qsign/stargazers)
 
