@@ -55,6 +55,9 @@
     |-libQSec.so
   |-8.9.68
 ```
+
+通常来说，**到这步就完成了**，你可以无脑使用 `ANDROID_PHONE` 协议登录了。如果需要详细配置，请往下看。
+
 首次加载插件会新建配置文件 `config/top.mrxiaom.qsign/config.yml`
 
 目前配置文件里面仅有配置项 `base-path`，即使用的签名服务路径，默认值为 `txlib/8.9.63`，按自己所需进行修改。  
@@ -70,6 +73,31 @@
 
 插件加载时，会扫描 `base-path` 下以协议名命名的文件并加载协议变更。如 `android_phone.json`。  
 本插件的签名服务仅支持加载了协议变更的协议使用。
+
+# 升级插件
+
+如果你要升级 qsign 插件，通常只需要更换 plugins 文件夹内的 `qsign-x.x.x.mirai2.jar` 即可。  
+有时 `txlib` 内的签名服务相关文件会变动，可按需决定是否更新。
+
+# 屏蔽/减少日志
+> 仅限 mirai-console，如果你在使用 mirai-core 并且没有使用 MiraiLogger 作为日志框架，请根据自己使用的日志框架自行想办法解决。
+
+通常我们会看到日志的输出格式如下
+```
+年-月-日 时:分:秒 I/名称: 内容
+例如
+2023-07-16 11:45:14 I/QSign: Hello World!
+```
+在 **mirai关闭的情况下** 编辑配置文件 `config/Console/Logger.yml`，  
+在 `loggers` 下增加一句 `名称: NONE` 即可将该名称的日志等级改为 `无`，即不输出日志。  
+举个例子：
+```yaml
+# 特定日志记录器输出等级
+loggers:
+  com.github.unidbg.linux.ARM64SyscallHandler: NONE
+  com.github.unidbg.linux.AndroidSyscallHandler: NONE
+  stderr: NONE
+```
 
 # 在 mirai-core 中使用
 
