@@ -266,8 +266,8 @@ object UnidbgFetchQSign {
         }
     }
 }
-@Serializable
-data class Sign(
+
+class Sign(
     val token: ByteArray,
     val extra: ByteArray,
     val sign: ByteArray,
