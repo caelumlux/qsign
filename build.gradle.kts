@@ -31,7 +31,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.3.3")
     implementation("org.slf4j:jcl-over-slf4j:2.0.7")
 
-    shadow(files("libs/unidbg-fix.jar"))
+    implementation(files("libs/unidbg-android.jar"))
 
 }
 
@@ -45,7 +45,8 @@ mirai {
 
 tasks {
     processResources {
-        from(zipTree("libs/unidbg-fix.jar"))
+        // temporary fix of mamoe/mirai#2478
+        from(zipTree("libs/unidbg-android.jar"))
     }
     create<Zip>("deploy") {
         group = "build"
