@@ -14,6 +14,7 @@ import moe.fuqiuluo.ext.toHexString
 import moe.fuqiuluo.unidbg.QSecVM
 import moe.fuqiuluo.unidbg.vm.GlobalData
 import net.mamoe.mirai.utils.MiraiLogger
+import top.mrxiaom.qsign.QSignService
 import java.io.File
 import java.util.*
 
@@ -134,12 +135,25 @@ class QSecJni(
         return super.callIntMethodV(vm, dvmObject, signature, vaList)
     }
 
+    override fun acceptMethod(dvmClass: DvmClass, signature: String, isStatic: Boolean): Boolean {
+        if (QSignService.Factory.CONFIG.unidbg.debug) {
+            println("Accept ${ if (isStatic) "static" else "" } ${dvmClass.className}.$signature")
+        }
+        if (signature == "com/tencent/mobileqq/qsec/qsecest/QsecEst->p(Landroid/content/Context;I)Ljava/lang/String;") {
+            return false
+        }
+        return super.acceptMethod(dvmClass, signature, isStatic)
+    }
+
     override fun callStaticObjectMethodV(
         vm: BaseVM,
         dvmClass: DvmClass,
         signature: String,
         vaList: VaList
     ): DvmObject<*> {
+        if (signature == "com/tencent/mobileqq/qsec/qsecest/QsecEst->p(Landroid/content/Context;I)Ljava/lang/String;") {
+            //vm.addNotFoundClass()
+        }
         if (signature == "com/tencent/mobileqq/dt/app/Dtc->mmKVValue(Ljava/lang/String;)Ljava/lang/String;") {
             return StringObject(
                 vm, when (val key = vaList.getObjectArg<StringObject>(0).value) {

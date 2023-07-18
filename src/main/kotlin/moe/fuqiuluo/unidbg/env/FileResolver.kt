@@ -87,6 +87,10 @@ class FileResolver(
             ))
         }
 
+        if (path == "/proc/meminfo" || path == "/proc/cpuinfo") {
+            return FileResult.failed(UnixEmulator.EACCES)
+        }
+
         if (path == "/proc/${emulator.pid}/cmdline"
             || path == "/proc/stat/cmdline" // an error case
             ) {
