@@ -38,7 +38,9 @@ object PluginMain : KotlinPlugin(
         logger.info("=============================================")
         val supportedProtocol = mutableListOf<BotConfiguration.MiraiProtocol>()
         for (protocol in BotConfiguration.MiraiProtocol.values()) {
-            val file = basePath.resolve("$protocol.json")
+            val file = basePath.listFiles { it ->
+                it.name.equals("$protocol.json", true)
+            }?.firstOrNull() ?: continue
             if (file.exists()) {
                 kotlin.runCatching {
                     val json = Json.parseToJsonElement(file.readText()).jsonObject
