@@ -134,9 +134,13 @@ class QSignService(
             lateinit var basePath: File
             lateinit var CONFIG: QSignConfig
             lateinit var cmdWhiteList: List<String>
+            private val json = Json {
+                ignoreUnknownKeys = true
+            }
+
             @JvmStatic
             fun loadConfigFromFile(file: File) {
-                CONFIG = Json.decodeFromString(
+                CONFIG = json.decodeFromString(
                     QSignConfig.serializer(),
                     file.readText()
                 ).apply { checkIllegal() }
