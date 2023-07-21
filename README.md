@@ -1,7 +1,7 @@
 # QSign
 
-[![mirai-core/mirai-console 2.15.0+](https://img.shields.io/badge/mirai--core/mirai--console-2.15.0+-green)](https://github.com/mamoe/mirai)
-[![unidbg-fetch-qsign 1.1.6](https://img.shields.io/badge/unidbg--fetch--qsign-1.1.6-yellowgreen)](https://github.com/fuqiuluo/unidbg-fetch-qsign)
+[![mirai-core/mirai-console 2.15.0+](https://img.shields.io/badge/mirai--core/mirai--console-2.15.0+-blue)](https://github.com/mamoe/mirai)
+[![unidbg-fetch-qsign 1.1.6](https://img.shields.io/badge/unidbg--fetch--qsign-1.1.6-orange)](https://github.com/fuqiuluo/unidbg-fetch-qsign)
 [![Releases](https://img.shields.io/github/downloads/MrXiaoM/unidbg-fetch-qsign/total?label=%E4%B8%8B%E8%BD%BD%E9%87%8F&logo=github)](https://github.com/MrXiaoM/qsign/releases)
 [![Stars](https://img.shields.io/github/stars/MrXiaoM/unidbg-fetch-qsign?label=%E6%A0%87%E6%98%9F&logo=github)](https://github.com/MrXiaoM/qsign/stargazers)
 
@@ -63,14 +63,16 @@
   |-8.9.70
 ```
 
-通常来说，**到这步就完成了**，你可以无脑使用 `ANDROID_PHONE` 协议登录了。如果需要详细配置，请往下看。
+通常来说，**到这步就完成了**，你可以无脑使用 `ANDROID_PHONE` 或 `ANDROID_PAD` 协议登录了。
 
-## 详细配置(非必要)
+如果需要详细配置，请往下看。
+
+# 详细配置(非必要)
 
 首次加载插件会新建配置文件 `config/top.mrxiaom.qsign/config.yml`
 
 目前配置文件里面仅有配置项 `base-path`，即使用的签名服务路径，默认值为 `txlib/8.9.63`，按自己所需进行修改。  
-推荐使用默认值，目前 `8.9.58` **未测试**，`8.9.68` **没有合适的**设备信息文件。  
+推荐使用默认值，目前本人测试 `8.9.63` 运行稳定，`8.9.58`、`8.9.68`、`8.9.70` **未测试，风险自担。**  
 
 配置文件的修改在重启 mirai 后生效。
 
