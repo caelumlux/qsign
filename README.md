@@ -54,7 +54,7 @@
   |-8.9.58
   |-8.9.63
     |-android_phone.json
-    |-android_phone.json
+    |-android_pad.json
     |-config.json
     |-dtconfig.json
     |-libfekit.so
@@ -64,6 +64,8 @@
 ```
 
 通常来说，**到这步就完成了**，你可以无脑使用 `ANDROID_PHONE` 协议登录了。如果需要详细配置，请往下看。
+
+## 详细配置(非必要)
 
 首次加载插件会新建配置文件 `config/top.mrxiaom.qsign/config.yml`
 
