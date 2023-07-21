@@ -63,6 +63,5 @@ object PluginMain : KotlinPlugin(
         Factory.cmdWhiteList = getResource("cmd_whitelist.txt")?.lines() ?: error("`cmd_whitelist.txt` not found.")
         Factory.supportedProtocol = supportedProtocol
         Factory.register()
-        logger.info("已注册签名服务")
     }
 }
