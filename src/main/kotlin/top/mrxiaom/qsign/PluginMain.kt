@@ -52,9 +52,17 @@ object PluginMain : KotlinPlugin(
                 }
             }
         }
+        if (supportedProtocol.isEmpty()) {
+            logger.warning("你使用的签名服务目前没有支持的协议版本! 请将协议信息文件 (android_phone.json 或 android_pad.json) 置于“签名服务目录”，并重新启动 mirai")
+            logger.warning("签名服务未注册")
+            return
+        } else {
+            logger.info("支持签名服务的协议: ${supportedProtocol.joinToString(", ")}")
+        }
 
         Factory.cmdWhiteList = getResource("cmd_whitelist.txt")?.lines() ?: error("`cmd_whitelist.txt` not found.")
         Factory.supportedProtocol = supportedProtocol
         Factory.register()
+        logger.info("已注册签名服务")
     }
 }
