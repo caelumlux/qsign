@@ -113,3 +113,14 @@ loggers:
 [java](src/test/java/CoreUsage.java)
 
 构建的包稍大，投放到网络仓库上下载会很慢，请使用本地依赖。
+
+# 编译
+
+编译插件
+```
+./gradlew buildPlugin
+```
+打包发布 (将会在项目目录生成 `qsign-x.x.x-all.zip`)
+```
+./gradlew deploy
+```
