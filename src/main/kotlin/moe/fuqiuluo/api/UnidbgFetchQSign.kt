@@ -200,6 +200,17 @@ object UnidbgFetchQSign {
         return hasRegister
     }
 
+    fun destory(
+        uin: Long
+    ): Boolean {
+        if(uin in SessionManager){
+            SessionManager.close(uin)
+            return true
+        } else {
+            return false
+        }
+    }
+
     suspend fun requestToken(
         uin: Long
     ): Pair<Boolean, List<SsoPacket>> {
