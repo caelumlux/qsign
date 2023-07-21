@@ -1,11 +1,13 @@
 # QSign
 
 [![mirai-core/mirai-console 2.15.0+](https://img.shields.io/badge/mirai--core/mirai--console-2.15.0+-green)](https://github.com/mamoe/mirai)
-[![unidbg-fetch-qsign 1.1.5](https://img.shields.io/badge/unidbg--fetch--qsign-1.1.5-yellowgreen)](https://github.com/fuqiuluo/unidbg-fetch-qsign)
-[![Releases](https://img.shields.io/github/downloads/MrXiaoM/unidbg-fetch-qsign/total?label=%E4%B8%8B%E8%BD%BD%E9%87%8F&logo=github)](https://github.com/MrXiaoM/unidbg-fetch-qsign/releases)
-[![Stars](https://img.shields.io/github/stars/MrXiaoM/unidbg-fetch-qsign?label=%E6%A0%87%E6%98%9F&logo=github)](https://github.com/MrXiaoM/unidbg-fetch-qsign/stargazers)
+[![unidbg-fetch-qsign 1.1.6](https://img.shields.io/badge/unidbg--fetch--qsign-1.1.6-yellowgreen)](https://github.com/fuqiuluo/unidbg-fetch-qsign)
+[![Releases](https://img.shields.io/github/downloads/MrXiaoM/unidbg-fetch-qsign/total?label=%E4%B8%8B%E8%BD%BD%E9%87%8F&logo=github)](https://github.com/MrXiaoM/qsign/releases)
+[![Stars](https://img.shields.io/github/stars/MrXiaoM/unidbg-fetch-qsign?label=%E6%A0%87%E6%98%9F&logo=github)](https://github.com/MrXiaoM/qsign/stargazers)
 
 通过 Unidbg 获取 QQSign 参数，基于 fuqiuluo/unidbg-fetch-qsign 修改，仅适用于 mirai。unidbg-fetch-sign 最低从 QQ8.9.33 (不囊括) 开始支持，TIM 不支持。
+
+本插件**自带**协议信息，在加载时将会应用与签名服务版本相同的设备信息文件。
 
 # 切记
 
@@ -50,11 +52,13 @@
   |-8.9.58
   |-8.9.63
     |-android_phone.json
+    |-android_phone.json
     |-config.json
     |-dtconfig.json
     |-libfekit.so
     |-libQSec.so
   |-8.9.68
+  |-8.9.70
 ```
 
 通常来说，**到这步就完成了**，你可以无脑使用 `ANDROID_PHONE` 协议登录了。如果需要详细配置，请往下看。
