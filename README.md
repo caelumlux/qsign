@@ -1,7 +1,7 @@
 # QSign
 
 [![mirai-core/mirai-console 2.15.0+](https://img.shields.io/badge/mirai--core/mirai--console-2.15.0+-blue)](https://github.com/mamoe/mirai)
-[![unidbg-fetch-qsign 1.1.6](https://img.shields.io/badge/unidbg--fetch--qsign-1.1.6-orange)](https://github.com/fuqiuluo/unidbg-fetch-qsign)
+[![unidbg-fetch-qsign 1.1.7](https://img.shields.io/badge/unidbg--fetch--qsign-1.1.7-orange)](https://github.com/fuqiuluo/unidbg-fetch-qsign)
 [![Releases](https://img.shields.io/github/downloads/MrXiaoM/unidbg-fetch-qsign/total?label=%E4%B8%8B%E8%BD%BD%E9%87%8F&logo=github)](https://github.com/MrXiaoM/qsign/releases)
 [![Stars](https://img.shields.io/github/stars/MrXiaoM/unidbg-fetch-qsign?label=%E6%A0%87%E6%98%9F&logo=github)](https://github.com/MrXiaoM/qsign/stargazers)
 
@@ -38,6 +38,8 @@
 # 部署方法
 
 请在 mirai 版本大于或等于 `2.15.0` **正式版**的环境下操作。
+
+在操作之前，请先删除原有的`所有`**可能带有签名服务**的插件，以免产生冲突。
 
 > 文件很大，下载可能较慢，可以尝试使用以下工具站进行加速  
 > https://ghproxy.com/  
