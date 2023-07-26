@@ -272,8 +272,11 @@ object UnidbgFetchQSign {
     }
 
     internal suspend inline fun <T> Session.withLock(block: () -> T): T {
+        val job = timer(initialDelay = 5000, period = 5000) {
+            if (mutex.isLocked) mutex.unlock()
+        }
         return mutex.withLock {
-            block()
+            block().also { job.cancel() }
         }
     }
 }
