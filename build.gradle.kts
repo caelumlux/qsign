@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "top.mrxiaom"
-version = "1.0.4"
+version = "1.0.5"
 val versionUnidbgFetchQSign = "1.1.7"
 
 buildConfig {
