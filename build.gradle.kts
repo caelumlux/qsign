@@ -6,8 +6,8 @@ plugins {
 }
 
 group = "top.mrxiaom"
-version = "1.0.5"
-val versionUnidbgFetchQSign = "1.1.7"
+version = "1.0.6"
+val versionUnidbgFetchQSign = "1.1.8-dev"
 
 buildConfig {
     className("BuildConstants")
