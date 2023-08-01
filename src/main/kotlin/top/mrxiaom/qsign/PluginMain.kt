@@ -30,6 +30,7 @@ object PluginMain : KotlinPlugin(
         logger.info("签名服务目录: ${basePath.absolutePath}")
 
         FEBound.initAssertConfig(Factory.basePath)
+        logger.info("FEBound sum = ${FEBound.checkCurrent()}")
         Factory.loadConfigFromFile(basePath.resolve("config.json"))
 
         logger.info("已成功读取签名服务配置")
