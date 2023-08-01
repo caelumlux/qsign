@@ -291,7 +291,8 @@ object UnidbgFetchQSign {
                 job.cancel()
             }
         } finally {
-            unlock()
+            if (isLocked)
+                unlock()
         }
     }
 }
