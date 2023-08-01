@@ -146,7 +146,7 @@ class QSecJni(
             return false
         }
         if (QSignService.Factory.CONFIG.unidbg.debug) {
-            println("Accept ${ if (isStatic) "static" else "" } $signature")
+            logger.info("Accept ${ if (isStatic) "static" else "" } $signature")
         }
         return super.acceptMethod(dvmClass, signature, isStatic)
     }
