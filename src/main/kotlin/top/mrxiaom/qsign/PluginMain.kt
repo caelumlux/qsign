@@ -2,11 +2,14 @@ package top.mrxiaom.qsign
 
 import com.tencent.mobileqq.dt.model.FEBound
 import kotlinx.serialization.json.*
+import moe.fuqiuluo.api.UnidbgFetchQSign
 import net.mamoe.mirai.console.MiraiConsole
 import net.mamoe.mirai.console.extension.PluginComponentStorage
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
 import net.mamoe.mirai.console.plugin.version
+import net.mamoe.mirai.event.events.BotOfflineEvent
+import net.mamoe.mirai.event.globalEventChannel
 import net.mamoe.mirai.utils.BotConfiguration
 import top.mrxiaom.qsign.QSignService.Factory
 import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
@@ -64,5 +67,11 @@ object PluginMain : KotlinPlugin(
         Factory.cmdWhiteList = getResource("cmd_whitelist.txt")?.lines() ?: error("`cmd_whitelist.txt` not found.")
         Factory.supportedProtocol = supportedProtocol
         Factory.register()
+
+        globalEventChannel().run {
+            subscribeAlways<BotOfflineEvent> {
+                UnidbgFetchQSign.destory(it.bot.id)
+            }
+        }
     }
 }
