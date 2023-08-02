@@ -114,11 +114,32 @@ loggers:
 
 # 在 mirai-core 中使用
 
-先想办法引用本插件为依赖，在登录前执行以下代码  
-[kotlin](src/test/kotlin/CoreUsage.kt)  
-[java](src/test/java/CoreUsage.java)
+先引用本插件为依赖
 
-构建的包稍大，投放到网络仓库上下载会很慢，请使用本地依赖。
+```kotlin
+// Gradle: build.gradle(.kts)
+repositories {
+  mavenCentral()
+}
+dependencies {
+  implementation("top.mrxiaom:qsign:$QSIGN_VERSION")
+}
+```
+```xml
+<!-- Maven: pom.xml -->
+<dependencies>
+  <dependency>
+    <groupId>top.mrxiaom</groupId>
+    <artifactId>qsign</artifactId>
+    <version>$QSIGN_VERSION</version>
+    <scope>provided</scope>
+  </dependency>
+</dependencies>
+```
+
+在登录前执行以下代码即可，最好在程序初始化时执行
+
+[kotlin 用法](src/test/kotlin/CoreUsage.kt) | [java 用法](src/test/java/CoreUsage.java)
 
 # 编译
 

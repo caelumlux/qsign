@@ -1,5 +1,10 @@
 plugins {
     kotlin("jvm") version "1.8.0"
+
+    `maven-publish`
+    signing
+    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.22"
     id("net.mamoe.mirai-console") version "2.15.0"
     id("com.github.gmazzo.buildconfig") version "3.1.0"
@@ -43,6 +48,10 @@ mirai {
     jvmTarget = JavaVersion.VERSION_11
 }
 
+java {
+    withSourcesJar()
+}
+
 tasks {
     processResources {
         // temporary fix of mamoe/mirai#2478
@@ -61,4 +70,64 @@ tasks {
         destinationDirectory.set(rootProject.projectDir)
         archiveFileName.set("${rootProject.name}-${rootProject.version}-all.zip")
     }
+    create<Jar>("javadocJar") {
+        dependsOn(javadoc)
+        archiveClassifier.set("javadoc")
+        from(javadoc.get().destinationDir)
+    }
 }
+publishing {
+    publications {
+        create("mavenRelease", MavenPublication::class) {
+            from(components.named("kotlin").get())
+            groupId = "top.mrxiaom"
+            artifactId = "qsign"
+            version = rootProject.version.toString()
+
+            artifact(tasks.named("sourcesJar"))
+            artifact(tasks.named("javadocJar"))
+
+            pom {
+                name.set("qsign")
+                description.set("Get QQ sign with unidbg, but in mamoe/mirai.")
+                url.set("https://github.com/MrXiaoM/qsign")
+                licenses {
+                    license {
+                        name.set("GPL-3.0 License")
+                        url.set("https://www.gnu.org/licenses/gpl-3.0.html")
+                    }
+                }
+                developers {
+                    developer {
+                        name.set("MrXiaoM")
+                        email.set("mrxiaom@qq.com")
+                    }
+                }
+                scm {
+                    url.set("https://github.com/MrXiaoM/qsign")
+                    connection.set("scm:git:https://github.com/MrXiaoM/qsign.git")
+                    developerConnection.set("scm:git:https://github.com/MrXiaoM/qsign.git")
+                }
+            }
+        }
+    }
+}
+signing {
+    val signingKey = findProperty("signingKey")?.toString()
+    val signingPassword = findProperty("signingPassword")?.toString()
+    if (signingKey != null && signingPassword != null) {
+        useInMemoryPgpKeys(signingKey, signingPassword)
+    }
+    sign(publishing.publications.getByName("mavenRelease"))
+}
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+            findProperty("MAVEN_USERNAME")?.also { username.set(it.toString()) }
+            findProperty("MAVEN_PASSWORD")?.also { password.set(it.toString()) }
+        }
+    }
+}
+
