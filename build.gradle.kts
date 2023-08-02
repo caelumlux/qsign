@@ -1,3 +1,6 @@
+@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+import net.mamoe.mirai.console.gradle.wrapNameWithPlatform
+
 plugins {
     kotlin("jvm") version "1.8.0"
 
@@ -70,44 +73,66 @@ tasks {
         destinationDirectory.set(rootProject.projectDir)
         archiveFileName.set("${rootProject.name}-${rootProject.version}-all.zip")
     }
+    javadoc {
+        (options as StandardJavadocDocletOptions).run {
+            locale("zh_CN")
+            encoding("UTF-8")
+            docEncoding("UTF-8")
+            addBooleanOption("keywords", true)
+            addBooleanOption("Xdoclint:none", true)
+            addBooleanOption("html5", true)
+
+            windowTitle = "QSign Javadoc"
+            docTitle = "<b>QSign</b> $version"
+        }
+    }
     create<Jar>("javadocJar") {
         dependsOn(javadoc)
         archiveClassifier.set("javadoc")
         from(javadoc.get().destinationDir)
     }
+    create<net.mamoe.mirai.console.gradle.BuildMiraiPluginV2>("pluginJar") {
+        registerMetadataTask(
+            this@tasks,
+            "miraiPublicationPrepareMetadata".wrapNameWithPlatform(kotlin.target, true)
+        )
+        init(kotlin.target)
+        destinationDirectory.value(
+            project.layout.projectDirectory.dir(project.buildDir.name).dir("mirai")
+        )
+        archiveExtension.set("jar")
+    }
 }
-publishing {
-    publications {
-        create("mavenRelease", MavenPublication::class) {
-            from(components.named("kotlin").get())
-            groupId = "top.mrxiaom"
-            artifactId = "qsign"
-            version = rootProject.version.toString()
+publishing.publications {
+    create("mavenRelease", MavenPublication::class) {
+        groupId = "top.mrxiaom"
+        artifactId = "qsign"
+        version = rootProject.version.toString()
 
-            artifact(tasks.named("sourcesJar"))
-            artifact(tasks.named("javadocJar"))
+        artifact(tasks.named("sourcesJar"))
+        artifact(tasks.named("javadocJar"))
+        artifact(tasks.named("pluginJar"))
 
-            pom {
-                name.set("qsign")
-                description.set("Get QQ sign with unidbg, but in mamoe/mirai.")
+        pom {
+            name.set("qsign")
+            description.set("Get QQ sign with unidbg, but in mamoe/mirai.")
+            url.set("https://github.com/MrXiaoM/qsign")
+            licenses {
+                license {
+                    name.set("GPL-3.0 License")
+                    url.set("https://www.gnu.org/licenses/gpl-3.0.html")
+                }
+            }
+            developers {
+                developer {
+                    name.set("MrXiaoM")
+                    email.set("mrxiaom@qq.com")
+                }
+            }
+            scm {
                 url.set("https://github.com/MrXiaoM/qsign")
-                licenses {
-                    license {
-                        name.set("GPL-3.0 License")
-                        url.set("https://www.gnu.org/licenses/gpl-3.0.html")
-                    }
-                }
-                developers {
-                    developer {
-                        name.set("MrXiaoM")
-                        email.set("mrxiaom@qq.com")
-                    }
-                }
-                scm {
-                    url.set("https://github.com/MrXiaoM/qsign")
-                    connection.set("scm:git:https://github.com/MrXiaoM/qsign.git")
-                    developerConnection.set("scm:git:https://github.com/MrXiaoM/qsign.git")
-                }
+                connection.set("scm:git:https://github.com/MrXiaoM/qsign.git")
+                developerConnection.set("scm:git:https://github.com/MrXiaoM/qsign.git")
             }
         }
     }
@@ -130,4 +155,3 @@ nexusPublishing {
         }
     }
 }
-
