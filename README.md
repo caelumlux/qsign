@@ -12,7 +12,7 @@
 # 切记
 
  - 请使用与协议对应版本的 libfekit.so 文件
- - QSign 基于 Android 平台，其它平台 Sign 计算的参数不同，不互通（例如：IPad）。
+ - QSign 基于 Android 平台，其它平台 Sign 计算的参数不同，不互通（例如：iPad）。
  - 不支持载入 Tim.apk 的 so 文件。
 
 # 利弊
@@ -26,24 +26,6 @@
 由于双方项目接口差异，本项目 commit message 以 `[sync]` 开头的提交均为同步**源仓库**中相应的提交。
 
 你可以在 [Actions](https://github.com/MrXiaoM/qsign/actions) 找到最新构建。
-
-# 待办事项
-
-未完成，敬请期待
-
-- [ ] initialize-register
-  - [x] invoke api
-  - [ ] check for possible deadlock issue
-- [x] encryptTlv-customEnergy
-- [ ] qSecurityGetSign
-  - [x] sign
-  - [x] request token
-  - [ ] check for possible deadlock issue
-  - [ ] etc...
-- [ ] test
-  - [x] login
-  - [x] send message
-  - [ ] etc...
 
 有别的项目要做，本项目进度暂缓，不定期同步 unidbg-fetch-qsign 的变更。
 
@@ -125,6 +107,9 @@ loggers:
 ```
 
 # 在 mirai-core 中使用
+
+> 需要 Java 11，不支持 Android。  
+> Android 请参见 [fuqiuluo/SignFaker](https://github.com/fuqiuluo/SignFaker)
 
 先引用本插件为依赖
 
