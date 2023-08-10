@@ -25,7 +25,7 @@
 
 由于双方项目接口差异，本项目 commit message 以 `[sync]` 开头的提交均为同步**源仓库**中相应的提交。
 
-你可以在 [Actions](https://github.com/MrXiaoM/qsign/actions) 找到最新构建。
+你可以在 [Actions](https://github.com/MrXiaoM/qsign/actions/workflows/build.yml) 找到最新构建。
 
 有别的项目要做，本项目进度暂缓，不定期同步 unidbg-fetch-qsign 的变更。
 
