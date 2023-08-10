@@ -33,6 +33,7 @@ class QSecVM(
             emulator.syscallHandler.addIOResolver(resolver)
             vm.setJni(QSecJni(envData, this, global))
             vm.addNotFoundClass("com/tencent/mobileqq/dt/Dc")
+            vm.addNotFoundClass("com/tencent/mobileqq/dt/Dte")
 
         }.onFailure(logger::warning)
     }
