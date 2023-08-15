@@ -24,7 +24,12 @@ object PluginMain : KotlinPlugin(
         author("MrXiaoM")
     }.build()
 ) {
+    val isTermux = File("/data/data/com.termux").exists()
     override fun PluginComponentStorage.onLoad() {
+        if (isTermux) {
+            logger.warning("本插件不支持在 Termux 中运行，请尝试使用 fix-protocol-version")
+            return
+        }
         PluginConfig.reload()
         val basePath = File(PluginConfig.basePath).also {
             Factory.basePath = it
@@ -77,6 +82,8 @@ object PluginMain : KotlinPlugin(
     }
 
     override fun onEnable() {
-        CommandQSign.register()
+        if (!isTermux) {
+            CommandQSign.register()
+        }
     }
 }
