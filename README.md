@@ -9,6 +9,12 @@
 
 本插件**自带**协议信息，在加载时将会应用与签名服务版本相同的设备信息文件。
 
+# 不支持 Termux
+
+Termux 请使用 [cssxsh/fix-protocol-version](https://github.com/cssxsh/fix-protocol-version)，并在电脑上搭建签名服务，通过局域网连接签名服务。
+
+(可能未适配)或者使用 旧版本的 [cssxsh/fix-protocol-version](https://github.com/cssxsh/fix-protocol-version) + [fuqiuluo/SignFaker](https://github.com/fuqiuluo/SignFaker/releases)
+
 # 切记
 
  - 请使用与协议对应版本的 libfekit.so 文件
