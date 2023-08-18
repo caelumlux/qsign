@@ -152,8 +152,11 @@ class QSignService(
             }
         }
         override fun createForBot(context: EncryptServiceContext, serviceSubScope: CoroutineScope): EncryptService {
+            if (supportedProtocol.isEmpty()) {
+                throw UnsupportedOperationException("QSignService 没有找到可用的协议")
+            }
             if (context.extraArgs[KEY_BOT_PROTOCOL] !in supportedProtocol){
-                throw UnsupportedOperationException("QSignService only supports ${supportedProtocol.joinToString(", ")}.")
+                throw UnsupportedOperationException("QSignService 仅支持使用 ${supportedProtocol.joinToString(", ")} 协议登录.")
             }
             return QSignService(serviceSubScope.coroutineContext)
         }
