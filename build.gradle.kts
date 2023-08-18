@@ -48,7 +48,7 @@ tasks.test {
 }
 
 mirai {
-    jvmTarget = JavaVersion.VERSION_11
+    jvmTarget = JavaVersion.VERSION_1_8
 }
 
 java {
@@ -87,11 +87,13 @@ tasks {
         }
     }
     create<Jar>("javadocJar") {
+        group = "documentation"
         dependsOn(javadoc)
         archiveClassifier.set("javadoc")
         from(javadoc.get().destinationDir)
     }
     create<net.mamoe.mirai.console.gradle.BuildMiraiPluginV2>("pluginJar") {
+        group = "mirai"
         registerMetadataTask(
             this@tasks,
             "miraiPublicationPrepareMetadata".wrapNameWithPlatform(kotlin.target, true)

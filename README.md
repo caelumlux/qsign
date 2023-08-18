@@ -123,7 +123,7 @@ loggers:
 
 # 在 mirai-core 中使用
 
-> 需要 Java 11，不支持 Android。  
+> 需要 Java 8，不支持 Android。  
 > Android 请参见 [fuqiuluo/SignFaker](https://github.com/fuqiuluo/SignFaker)
 
 先引用本插件为依赖
