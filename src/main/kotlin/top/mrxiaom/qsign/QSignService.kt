@@ -1,8 +1,10 @@
 package top.mrxiaom.qsign
 
 import com.tencent.mobileqq.channel.SsoPacket
+import com.tencent.mobileqq.dt.model.FEBound
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 import moe.fuqiuluo.api.UnidbgFetchQSign
 import moe.fuqiuluo.comm.QSignConfig
 import moe.fuqiuluo.comm.checkIllegal
@@ -15,6 +17,8 @@ import net.mamoe.mirai.internal.spi.EncryptServiceContext.Companion.KEY_DEVICE_I
 import net.mamoe.mirai.internal.spi.EncryptServiceContext.Companion.KEY_QIMEI36
 import net.mamoe.mirai.utils.*
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
 class QSignService(
@@ -130,12 +134,55 @@ class QSignService(
     class Factory : EncryptService.Factory {
         override val priority: Int = -1919
         companion object {
-            lateinit var supportedProtocol: List<BotConfiguration.MiraiProtocol>
+            @JvmField
+            var supportedProtocol: MutableSet<BotConfiguration.MiraiProtocol> = mutableSetOf()
             lateinit var basePath: File
             lateinit var CONFIG: QSignConfig
-            lateinit var cmdWhiteList: List<String>
+            @JvmField
+            var cmdWhiteList: List<String> = this::class.java.classLoader
+                .getResourceAsStream("cmd_whitelist.txt")
+                ?.use { it.readBytes() }
+                ?.toString(Charsets.UTF_8)
+                ?.lines() ?: listOf()
             private val json = Json {
                 ignoreUnknownKeys = true
+            }
+            @JvmStatic
+            fun init(basePath: File): Int {
+                this.basePath = basePath
+
+                when {
+                    !basePath.exists() -> FileNotFoundException("设定的签名服务目录不存在")
+                    !basePath.isDirectory -> IOException("目标路径不是目录")
+                    !basePath.resolve("config.json").exists() -> FileNotFoundException("找不到 config.json")
+                    !basePath.resolve("dtconfig.json").exists() -> FileNotFoundException("找不到 dtconfig.json")
+                    !basePath.resolve("libfekit.so").exists() -> FileNotFoundException("找不到 libfekit.so")
+                    !basePath.resolve("libQSec.so").exists() -> FileNotFoundException("找不到 libQSec.so")
+                    else -> null
+                }?.also { throw it }
+
+                FEBound.initAssertConfig(Factory.basePath)
+                val sum = FEBound.checkCurrent()
+                loadConfigFromFile(basePath.resolve("config.json"))
+                return sum
+            }
+            @JvmStatic
+            fun loadProtocols(dir: File? = null) {
+                val basePath = dir ?: this.basePath
+                for (protocol in BotConfiguration.MiraiProtocol.values()) {
+                    val file = basePath.listFiles { it ->
+                        it.name.equals("$protocol.json", true)
+                    }?.firstOrNull() ?: continue
+                    if (file.exists()) {
+                        kotlin.runCatching {
+                            val json = Json.parseToJsonElement(file.readText()).jsonObject
+                            protocol.applyProtocolInfo(json)
+                            supportedProtocol.add(protocol)
+                        }.onFailure {
+                            logger.warning("加载 $protocol 的协议变更时发生一个异常", it)
+                        }
+                    }
+                }
             }
 
             @JvmStatic
