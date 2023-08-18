@@ -26,7 +26,8 @@ object PluginMain : KotlinPlugin(
 ) {
     val isTermux = File("/data/data/com.termux").exists()
     override fun PluginComponentStorage.onLoad() {
-        if (isTermux) {
+        PluginConfig.reload()
+        if (isTermux && !PluginConfig.ignoreTermux) {
             logger.warning("本插件不支持在 Termux 中运行，请尝试使用 fix-protocol-version")
             return
         }
@@ -34,7 +35,6 @@ object PluginMain : KotlinPlugin(
             logger.warning("cmd whitelist 为空，签名服务将停止加载")
             return
         }
-        PluginConfig.reload()
         val basePath = File(PluginConfig.basePath)
 
         logger.info("Loading QSign v$version (unidbg-fetch-qsign v${BuildConstants.UNIDBG_FETCH_QSIGN_VERSION})")
@@ -71,7 +71,7 @@ object PluginMain : KotlinPlugin(
     }
 
     override fun onEnable() {
-        if (!isTermux) {
+        if (!isTermux || PluginConfig.ignoreTermux) {
             CommandQSign.register()
         }
     }
