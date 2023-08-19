@@ -42,7 +42,7 @@ object PluginMain : KotlinPlugin(
 
         logger.info("Loading QSign v$version (unidbg-fetch-qsign v${BuildConstants.UNIDBG_FETCH_QSIGN_VERSION})")
         logger.info("正在 Mirai ${MiraiConsole.version} 上运行")
-        logger.info("签名服务目录: ${Factory.basePath.absolutePath}")
+        logger.info("签名服务目录: ${basePath.absolutePath}")
 
         val sum = Factory.init(basePath)
         logger.info("FEBound sum = $sum")
