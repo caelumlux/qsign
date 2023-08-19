@@ -15,6 +15,7 @@ import net.mamoe.mirai.utils.BotConfiguration
 import top.mrxiaom.qsign.QSignService.Factory
 import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
 import java.io.File
+import kotlin.system.exitProcess
 
 object PluginMain : KotlinPlugin(
     JvmPluginDescriptionBuilder(
@@ -29,6 +30,8 @@ object PluginMain : KotlinPlugin(
         PluginConfig.reload()
         if (isTermux && !PluginConfig.ignoreTermux) {
             logger.warning("本插件不支持在 Termux 中运行，请尝试使用 fix-protocol-version")
+            logger.warning("若执意想在 Termux 中使用本插件，请到 config/top.mrxiaom.qsign/config.yml 将 ignore-termux 开启")
+            exitProcess(1)
             return
         }
         if (Factory.cmdWhiteList.isEmpty()) {
