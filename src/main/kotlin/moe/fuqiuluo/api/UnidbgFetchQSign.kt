@@ -38,7 +38,7 @@ object UnidbgFetchQSign {
     }
 
     suspend fun energy(
-        uin: Long, cmd: String,
+        uin: Long, data: String,
         modeString: String? = null,
         version: String? = null, guid: ByteArray? = null,
         androidId: String? = null,
@@ -52,12 +52,12 @@ object UnidbgFetchQSign {
             findSession(uin)
         }
 
-        if (!(cmd.startsWith("810_") || cmd.startsWith("812_"))) {
+        if (!(data.startsWith("810_") || data.startsWith("812_"))) {
             error("data参数不合法")
         }
         val mode: String?
         if (modeString != null) mode = modeString
-        else mode = when (cmd) {
+        else mode = when (data) {
             "810_d", "810_a", "810_f", "810_9" -> "v2"
             "810_2", "810_25", "810_7", "810_24" -> "v1"
             "812_a" -> "v3"
@@ -71,19 +71,21 @@ object UnidbgFetchQSign {
             "v1" -> {
                 if (version == null) error("lack of version")
                 if (guid == null) error("lack of guid")
-                val salt = ByteBuffer.allocate(8 + 2 + guid.size + 2 + 10)
+                val sub = data.substring(4).toInt(16)
+                val salt = ByteBuffer.allocate(8 + 2 + guid.size + 2 + 10 + 4)
                 salt.putLong(uin)
                 salt.putShort(guid.size.toShort())
                 salt.put(guid)
                 salt.putShort(version.length.toShort())
                 salt.put(version.toByteArray())
+                salt.putInt(sub)
                 salt.array()
             }
 
             "v2" -> {
                 if (version == null) error("lack of version")
                 if (guid == null) error("lack of guid")
-                val sub = cmd.substring(4).toInt(16)
+                val sub = data.substring(4).toInt(16)
                 val salt = ByteBuffer.allocate(4 + 2 + guid.size + 2 + 10 + 4 + 4)
                 salt.putInt(0)
                 salt.putShort(guid.size.toShort())
@@ -132,7 +134,7 @@ object UnidbgFetchQSign {
         }
 
         val sign = session.withLock {
-            Dandelion.energy(session.vm, cmd, salt)
+            Dandelion.energy(session.vm, data, salt)
         }
         return sign
     }
