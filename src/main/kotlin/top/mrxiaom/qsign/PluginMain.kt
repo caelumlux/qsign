@@ -49,7 +49,7 @@ object PluginMain : KotlinPlugin(
         logger.info("FEBound sum = $sum")
 
         logger.info("已成功读取签名服务配置")
-        logger.info("  签名协议包名: ${CONFIG.protocol.packageName}")
+        logger.info("  签名协议包名: ${CONFIG.protocol.packageName ?: "com.tencent.mobileqq"}")
         logger.info("  签名服务版本: ${CONFIG.protocol.version}")
         logger.info("  签名服务QUA: ${CONFIG.protocol.qua}")
         logger.info("=============================================")

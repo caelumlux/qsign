@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "top.mrxiaom"
-version = "1.0.9"
+version = "1.1.0-beta"
 findProperty("dev.sha")?.also {
     version = "$version-dev-$it"
 }
