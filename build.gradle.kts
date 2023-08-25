@@ -15,7 +15,7 @@ plugins {
 
 group = "top.mrxiaom"
 version = "1.0.9"
-val versionUnidbgFetchQSign = "1.1.7b2"
+val versionUnidbgFetchQSign = "1.1.9"
 
 buildConfig {
     className("BuildConstants")
@@ -39,7 +39,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:1.3.3")
     implementation("org.slf4j:jcl-over-slf4j:2.0.7")
 
-    implementation(files("libs/unidbg-1.0.3.jar"))
+    implementation(files("libs/unidbg-android-1.0.4.jar"))
 
 }
 
@@ -58,7 +58,7 @@ java {
 tasks {
     processResources {
         // temporary fix of mamoe/mirai#2478
-        from(zipTree("libs/unidbg-1.0.3.jar"))
+        from(zipTree("libs/unidbg-android-1.0.4.jar"))
     }
     create<Zip>("deploy") {
         group = "build"
