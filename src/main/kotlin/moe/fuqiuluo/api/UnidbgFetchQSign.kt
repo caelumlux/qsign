@@ -7,6 +7,8 @@ import com.tencent.mobileqq.qsec.qsecdandelionsdk.Dandelion
 import com.tencent.mobileqq.sign.QQSecuritySign
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -230,19 +232,14 @@ object UnidbgFetchQSign {
                 lock.tryLock()
                 QQSecuritySign.requestToken(vm)
 
-                val timer = timer(initialDelay = 5000L, period = 5000L) {
-                    if (lock.isLocked) {
-                        isSuccessful = false
-                        lock.unlock()
-                        this.cancel()
+                withTimeoutOrNull(5000) {
+                    lock.withLock {
+                        val requiredPacket = vm.global["PACKET"] as ArrayList<SsoPacket>
+                        list.addAll(requiredPacket)
+                        requiredPacket.clear()
                     }
-                }
-
-                lock.withLock {
-                    val requiredPacket = vm.global["PACKET"] as ArrayList<SsoPacket>
-                    list.addAll(requiredPacket)
-                    requiredPacket.clear()
-                    timer.cancel()
+                } ?: {
+                    isSuccessful = false
                 }
             }
             return Pair(isSuccessful, list)
