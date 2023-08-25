@@ -157,7 +157,7 @@ class QSignService(
                     !basePath.resolve("config.json").exists() -> FileNotFoundException("找不到 config.json")
                     !basePath.resolve("dtconfig.json").exists() -> FileNotFoundException("找不到 dtconfig.json")
                     !basePath.resolve("libfekit.so").exists() -> FileNotFoundException("找不到 libfekit.so")
-                    !basePath.resolve("libQSec.so").exists() -> FileNotFoundException("找不到 libQSec.so")
+                    //!basePath.resolve("libQSec.so").exists() -> FileNotFoundException("找不到 libQSec.so")
                     else -> null
                 }?.also { throw it }
 

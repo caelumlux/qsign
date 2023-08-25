@@ -4,6 +4,7 @@ import com.tencent.crypt.Crypt
 import com.tencent.mobileqq.channel.ChannelManager
 import com.tencent.mobileqq.channel.SsoPacket
 import com.tencent.mobileqq.qsec.qsecdandelionsdk.Dandelion
+import com.tencent.mobileqq.qsec.qsecurity.QSec
 import com.tencent.mobileqq.sign.QQSecuritySign
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -168,6 +169,7 @@ object UnidbgFetchQSign {
         lateinit var o3did: String
 
         val sign = session.withLock {
+            vm.global["est_data"] = QSec.getEst(vm)
             QQSecuritySign.getSign(vm, qua, cmd, buffer, seq, uin.toString()).value.also {
                 o3did = vm.global["o3did"] as? String ?: ""
                 val requiredPacket = vm.global["PACKET"] as ArrayList<SsoPacket>
@@ -290,8 +292,11 @@ object UnidbgFetchQSign {
                 job.cancel()
             }
         } finally {
-            if (isLocked)
-                unlock()
+            if (isLocked) {
+                try {
+                    unlock()
+                } catch (_: java.lang.Exception) {}
+            }
         }
     }
 }
