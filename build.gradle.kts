@@ -15,6 +15,9 @@ plugins {
 
 group = "top.mrxiaom"
 version = "1.0.9"
+findProperty("dev.sha")?.also {
+    version = "$version-dev-$it"
+}
 val versionUnidbgFetchQSign = "1.1.9"
 
 buildConfig {
