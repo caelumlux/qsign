@@ -7,7 +7,6 @@ import moe.fuqiuluo.unidbg.env.FileResolver
 import moe.fuqiuluo.unidbg.env.QSecJni
 import moe.fuqiuluo.unidbg.vm.AndroidVM
 import moe.fuqiuluo.unidbg.vm.GlobalData
-import org.slf4j.LoggerFactory
 import java.io.File
 import javax.security.auth.Destroyable
 import kotlin.system.exitProcess
@@ -16,8 +15,9 @@ class QSecVM(
     val coreLibPath: File,
     val envData: EnvData,
     dynarmic: Boolean,
-    unicorn: Boolean
-): Destroyable, AndroidVM(envData.packageName, dynarmic, unicorn) {
+    unicorn: Boolean,
+    kvm: Boolean
+): Destroyable, AndroidVM(envData.packageName, dynarmic, unicorn, kvm) {
     private var destroy: Boolean = false
     private var isInit: Boolean = false
     internal val global = GlobalData()

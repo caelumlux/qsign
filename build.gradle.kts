@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "moe.fuqiuluo"
-version = "1.1.9"
+version = "1.2.1"
 
 repositories {
     mavenCentral()

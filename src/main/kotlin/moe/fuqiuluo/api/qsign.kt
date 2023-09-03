@@ -4,7 +4,6 @@ package moe.fuqiuluo.api
 
 import CONFIG
 import com.tencent.mobileqq.channel.SsoPacket
-import com.tencent.mobileqq.qsec.qsecurity.QSec
 import com.tencent.mobileqq.sign.QQSecuritySign
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -67,20 +66,18 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.requestSign(
     guid: String
 ) {
     val session = initSession(uin.toLong()) ?: run {
-        if (androidId.isNullOrEmpty() || guid.isNullOrEmpty()) {
+        if (androidId.isEmpty() || guid.isEmpty()) {
             throw MissingKeyError
         }
-        SessionManager.register(
-            EnvData(
-                uin.toLong(),
-                androidId,
-                guid.lowercase(),
-                qimei36,
-                qua,
-                CONFIG.protocol.version,
-                CONFIG.protocol.code
-            )
-        )
+        SessionManager.register(EnvData(
+            uin.toLong(),
+            androidId,
+            guid.lowercase(),
+            qimei36,
+            qua,
+            CONFIG.protocol.version,
+            CONFIG.protocol.code
+        ))
         findSession(uin.toLong())
     }
     val vm = session.vm
@@ -88,11 +85,10 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.requestSign(
         vm.global["qimei36"] = qimei36
     }
 
+    var o3did = ""
     val list = arrayListOf<SsoPacket>()
-    lateinit var o3did: String
 
-    val sign = session.withLock {
-        vm.global["est_data"] = QSec.getEst(vm)
+    val sign = session.withRuntime {
         QQSecuritySign.getSign(vm, qua, cmd, buffer, seq, uin).value.also {
             o3did = vm.global["o3did"] as? String ?: ""
             val requiredPacket = vm.global["PACKET"] as ArrayList<SsoPacket>
@@ -101,13 +97,17 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.requestSign(
         }
     }
 
-    call.respond(
-        APIResult(
-            0, "success", Sign(
-                sign.token.toHexString(),
-                sign.extra.toHexString(),
-                sign.sign.toHexString(), o3did, list
+    if (sign == null) {
+        call.respond(APIResult(-1, "failed", null))
+    } else {
+        call.respond(
+            APIResult(
+                0, "success", Sign(
+                    sign.token.toHexString(),
+                    sign.extra.toHexString(),
+                    sign.sign.toHexString(), o3did, list
+                )
             )
         )
-    )
+    }
 }
