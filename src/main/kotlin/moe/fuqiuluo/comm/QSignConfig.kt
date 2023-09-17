@@ -38,10 +38,10 @@ data class Protocol(
 
 @Serializable
 data class UnidbgConfig(
-    var dynarmic: Boolean,
-    var unicorn: Boolean,
-    var kvm: Boolean,
-    var debug: Boolean,
+    var dynarmic: Boolean = false,
+    var unicorn: Boolean = true,
+    var kvm: Boolean = false,
+    var debug: Boolean = true,
 )
 
 @Serializable
@@ -56,8 +56,8 @@ data class QSignConfig(
     var unidbg: UnidbgConfig,
     @JsonNames("blackList", "black_list")
     var blackList: List<Long>? = null,
-    var count: Int,
-    @SerialName("share_token") var shareToken: Boolean
+    var count: Int = 1,
+    @SerialName("share_token") var shareToken: Boolean = true
 )
 
 fun QSignConfig.checkIllegal() {
