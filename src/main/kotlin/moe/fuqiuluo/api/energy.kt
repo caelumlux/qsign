@@ -3,6 +3,7 @@ package moe.fuqiuluo.api
 import CONFIG
 import com.tencent.crypt.Crypt
 import com.tencent.mobileqq.qsec.qsecdandelionsdk.Dandelion
+import com.tencent.mobileqq.qsec.qsecurity.QSec
 import com.tencent.secprotocol.ByteData
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -33,10 +34,14 @@ fun Routing.energy() {
             findSession(uin)
         }
 
-        val sign = session.withLock {
+        val sign = session.withRuntime {
             Dandelion.energy(session.vm, data, salt)
         }
-        call.respond(APIResult(0, "success", sign.toHexString()))
+        if (sign == null) {
+            call.respond(APIResult(-1, "failed", null))
+        } else {
+            call.respond(APIResult(0, "success", sign.toHexString()))
+        }
     }
 
     get("/get_byte") {
@@ -122,11 +127,16 @@ fun Routing.energy() {
             }
         }
 
-        val sign = session.withLock {
+        val sign = session.withRuntime {
+            session.vm.global["est_data"] = QSec.getEst(session.vm)
             ByteData.getByte(session.vm, uin.toString(), data, salt, guid)
         }
 
-        call.respond(APIResult(0, "success", sign.toHexString()))
+        if (sign == null) {
+            call.respond(APIResult(-1, "failed", null))
+        } else {
+            call.respond(APIResult(0, "success", sign.toHexString()))
+        }
     }
 
     get("/energy") {
@@ -218,10 +228,14 @@ fun Routing.energy() {
             }
         }
 
-        val sign = session.withLock {
+        val sign = session.withRuntime {
             Dandelion.energy(session.vm, data, salt)
         }
 
-        call.respond(APIResult(0, "success", sign.toHexString()))
+        if (sign == null) {
+            call.respond(APIResult(-1, "failed", null))
+        } else {
+            call.respond(APIResult(0, "success", sign.toHexString()))
+        }
     }
 }

@@ -172,10 +172,9 @@ class FileResolver(
         }
 
         if (path == "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/${vm.envData.packageName}-xJKJPVp9lorkCgR_w5zhyA==/lib/arm64") {
-            if (CONFIG.unidbg.debug)
-                println("尝试获取library| 但是我不给")
             //return FileResult.success(DirectoryFileIO(oflags, path,
-            //    DirectoryFileIO.DirectoryEntry(true, "libfekit.so"),
+             //   DirectoryFileIO.DirectoryEntry(true, "libfekit.so"),
+             //   DirectoryFileIO.DirectoryEntry(true, "libpoxy.so"),
             //))
         }
 

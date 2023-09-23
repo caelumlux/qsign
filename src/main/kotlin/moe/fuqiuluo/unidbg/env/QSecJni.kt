@@ -392,13 +392,20 @@ class QSecJni(
             return vm.resolveClass("android/content/pm/ApplicationInfo").newObject(null)
         }
         if (signature == "android/content/Context->getFilesDir()Ljava/io/File;") {
-            return if (envData.version == "3.5.1") {
-                vm.resolveClass("android/content/Context", vm.resolveClass("java/io/File"))
-                    .newObject(File("/data/user/0/${envData.packageName}/files"))
-            } else {
-                vm.resolveClass("java/io/File", vm.resolveClass("android/content/Context"))
-                    .newObject(File("/data/user/0/${envData.packageName}/files"))
-            }
+            return vm.resolveClass("android/content/Context")
+                .also {
+                    it.superClass = vm.resolveClass("java/io/File").apply {
+                        this.superClass = it
+                    }
+                }
+                .newObject(File("/data/user/0/${envData.packageName}/files"))
+            //return vm.resolveClass("java/io/File", vm.resolveClass("android/content/Context"))
+            //    .newObject(File("/data/user/0/${envData.packageName}/files"))
+
+            //if (envData.version == "3.5.1") {
+            //
+            //} else {
+            //}
         }
         if (signature == "android/content/Context->getContentResolver()Landroid/content/ContentResolver;") {
             return vm.resolveClass("android/content/ContentResolver")
@@ -410,11 +417,11 @@ class QSecJni(
         if (signature == "android/content/Intent->addCategory(Ljava/lang/String;)Landroid/content/Intent;") {
             return dvmObject
         }
+        if (signature == "java/io/File->getPackageResourcePath()Ljava/lang/String;") {
+            return StringObject(vm, "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/${envData.packageName}-xJKJPVp9lorkCgR_w5zhyA==/base.apk")
+        }
         if (signature == "android/content/Context->getPackageResourcePath()Ljava/lang/String;") {
-            return StringObject(
-                vm,
-                "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/${envData.packageName}-xJKJPVp9lorkCgR_w5zhyA==/base.apk"
-            )
+            return StringObject(vm, "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/${envData.packageName}-xJKJPVp9lorkCgR_w5zhyA==/base.apk")
         }
         if (signature == "android/content/Context->getPackageName()Ljava/lang/String;") {
             return StringObject(vm, envData.packageName)

@@ -24,7 +24,8 @@ private val API_LIST = arrayOf(
     Routing::energy,
     Routing::submit,
     Routing::requestToken,
-    Routing::register
+    Routing::register,
+    Routing::addedSign
 )
 
 fun main(args: Array<String>) {
