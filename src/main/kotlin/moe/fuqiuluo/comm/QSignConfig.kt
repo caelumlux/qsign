@@ -3,6 +3,7 @@ package moe.fuqiuluo.comm
 
 import CONFIG
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 
@@ -22,21 +23,25 @@ data class EnvData(
 
     var qua: String = CONFIG.protocol.qua,
     var version: String = CONFIG.protocol.version,
-    var code: String = CONFIG.protocol.code
+    var code: String = CONFIG.protocol.code,
+    var packageName: String = CONFIG.protocol.packageName ?: "com.tencent.mobileqq",
 )
 
 @Serializable
 data class Protocol(
     var qua: String,
     var version: String,
-    var code: String
+    var code: String,
+    @SerialName("package_name")
+    var packageName: String? = null,
 )
 
 @Serializable
 data class UnidbgConfig(
-    var dynarmic: Boolean,
-    var unicorn: Boolean,
-    var debug: Boolean,
+    var dynarmic: Boolean = false,
+    var unicorn: Boolean = true,
+    var kvm: Boolean = false,
+    var debug: Boolean = true,
 )
 
 @Serializable
@@ -50,7 +55,9 @@ data class QSignConfig(
     var protocol: Protocol,
     var unidbg: UnidbgConfig,
     @JsonNames("blackList", "black_list")
-    var blackList: List<Long>? = null
+    var blackList: List<Long>? = null,
+    var count: Int = 1,
+    @SerialName("share_token") var shareToken: Boolean = true
 )
 
 fun QSignConfig.checkIllegal() {

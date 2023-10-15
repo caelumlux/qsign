@@ -1,4 +1,4 @@
-获取QQSign参数通过Unidbg，开放HTTP API。unidbg-fetch-sign最低从QQ8.9.33（不囊括）开始支持，TIM不支持。
+获取QQSign参数通过Unidbg，开放HTTP API。unidbg-fetch-sign最低从QQ8.9.33（不囊括）开始支持。
 
 # 切记
 
@@ -75,3 +75,4 @@ POST的内容："uin=" + uin + "&qua=" + qua + "&cmd=" + cmd + "&seq=" + seq + "
 
  - 昵称：**[咖啡]**  QQ：1456****68
  - 昵称：**RinsToln** QQ：339***8297302
+ - 昵称：**菩提** QQ：919***595

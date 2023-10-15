@@ -17,7 +17,7 @@ fun Routing.submit() {
 
         val session = findSession(uin)
 
-        session.withLock {
+        session.withRuntime {
             ChannelManager.onNativeReceive(session.vm, cmd, buffer, callbackId)
             session.vm.global["HAS_SUBMIT"] = true
         }

@@ -1,18 +1,13 @@
+@file:OptIn(DelicateCoroutinesApi::class)
 package moe.fuqiuluo.api
 
 import CONFIG
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.*
 import moe.fuqiuluo.unidbg.session.Session
 import moe.fuqiuluo.unidbg.session.SessionManager
-import kotlin.concurrent.timer
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
 
 fun initSession(uin: Long): Session? {
-    return SessionManager[uin] ?: if (!CONFIG.autoRegister) {
+    return SessionManager.get(uin) ?: if (!CONFIG.autoRegister) {
         throw SessionNotFoundError
     } else {
         null
@@ -20,29 +15,11 @@ fun initSession(uin: Long): Session? {
 }
 
 fun findSession(uin: Long): Session {
-    return SessionManager[uin] ?: throw SessionNotFoundError
+    return SessionManager.get(uin) ?: throw SessionNotFoundError
 }
 
-internal suspend inline fun <T> Session.withLock(action: () -> T): T {
-    return mutex.withLockAndTimeout(5000, action)
-}
-
-@OptIn(ExperimentalContracts::class)
-private suspend inline fun <T> Mutex.withLockAndTimeout(timeout: Long, action: () -> T): T {
-    contract {
-        callsInPlace(action, InvocationKind.EXACTLY_ONCE)
-    }
-
-    lock()
-    val job = timer(initialDelay = timeout, period = timeout) {
-        if (isLocked)
-            unlock()
-    }
-    try {
-        return action().also {
-            job.cancel()
-        }
-    } finally {
-        unlock()
-    }
+internal inline fun <T> Session.withRuntime(crossinline action: () -> T): T? {
+    val t = action()
+    pool.release(this)
+    return t
 }
