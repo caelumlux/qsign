@@ -143,7 +143,10 @@ class QSignService(
                 .getResourceAsStream("cmd_whitelist.txt")
                 ?.use { it.readBytes() }
                 ?.toString(Charsets.UTF_8)
-                ?.lines() ?: listOf()
+                ?.lines()
+                ?.map { it.trim() }
+                ?.filter { it.isNotEmpty() && !it.startsWith("#") }
+                ?: listOf()
             private val json = Json {
                 ignoreUnknownKeys = true
             }
