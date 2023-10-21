@@ -1,3 +1,4 @@
+########### 仅复制粘贴，未完成，请勿使用 ###########
 {
   "apk_id": "com.tencent.mobileqq",
   "app_id": 537170996,
@@ -12,6 +13,6 @@
   "main_sig_map": 16724722,
   "sub_sig_map": 66560,
   "dump_time": 1691057433,
-  "qua": "V1_AND_SQ_8.9.73_4416_YYB_D",
+  "qua": "V1_AND_SQ_8.9.83_4680_YYB_D",
   "protocol_type": 6
 }
