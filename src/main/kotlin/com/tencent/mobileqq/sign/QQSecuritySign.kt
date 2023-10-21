@@ -40,7 +40,6 @@ object QQSecuritySign {
         }.onFailure {
             vm.newInstance("com/tencent/mobileqq/sign/QQSecuritySign", unique = true)
                 .callJniMethod(vm.emulator, "dispatchEvent(Ljava/lang/String;Ljava/lang/String;)V", cmd, uin)
-
         }
     }
 
@@ -50,8 +49,10 @@ object QQSecuritySign {
     }
 
     fun getSign(vm: QSecVM, qua: String, cmd: String, buffer: ByteArray, seq: Int, uin: String, qsec: DvmObject<*> = vm.newInstance("com/tencent/mobileqq/qsec/qsecurity/QSec", unique = true)): SignResultObject {
-        return (vm.newInstance("com/tencent/mobileqq/sign/QQSecuritySign", unique = true)
-            .callJniMethodObject(vm.emulator, "getSign(Lcom/tencent/mobileqq/qsec/qsecurity/QSec;Ljava/lang/String;Ljava/lang/String;[B[BLjava/lang/String;)Lcom/tencent/mobileqq/sign/QQSecuritySign\$SignResult;",
-                qsec, qua, cmd, buffer, BytesUtil.int32ToBuf(seq), uin) as SignResultObject)
+        return runCatching {
+            (vm.newInstance("com/tencent/mobileqq/sign/QQSecuritySign", unique = true)
+                .callJniMethodObject(vm.emulator, "getSign(Lcom/tencent/mobileqq/qsec/qsecurity/QSec;Ljava/lang/String;Ljava/lang/String;[B[BLjava/lang/String;)Lcom/tencent/mobileqq/sign/QQSecuritySign\$SignResult;",
+                    qsec, qua, cmd, buffer, BytesUtil.int32ToBuf(seq), uin) as SignResultObject)
+        }.getOrNull() ?: getSign(vm, qua, cmd, buffer, seq, uin, qsec)
     }
 }

@@ -16,10 +16,11 @@ class QSecVM(
     val coreLibPath: File,
     val envData: EnvData,
     dynarmic: Boolean,
-    unicorn: Boolean
-): Destroyable, AndroidVM(envData.packageName, dynarmic, unicorn) {
+    unicorn: Boolean,
+    kvm: Boolean
+): Destroyable, AndroidVM(envData.packageName, dynarmic, unicorn, kvm) {
     companion object {
-        private val logger = MiraiLogger.Factory.create(QSecVM::class.java)
+        private val logger = MiraiLogger.Factory.create(QSecVM::class)
     }
 
     private var destroy: Boolean = false
@@ -34,6 +35,7 @@ class QSecVM(
             vm.setJni(QSecJni(envData, this, global))
 
             if (envData.packageName == "com.tencent.mobileqq") {
+                println("QSign-Unidbg 白名单模式")
                 vm.setWhiteMode(true)
                 arrayOf(
                     "android/os/Build\$VERSION",

@@ -47,6 +47,10 @@ class FileResolver(
             }, path))
         }
 
+        if (path == "/data/data/com.tencent.tim/lib/libwtecdh.so") {
+            return FileResult.failed(UnixEmulator.ENOENT)
+        }
+
 
         if (path == "/proc/sys/kernel/random/boot_id") {
             return FileResult.success(ByteArrayFileIO(oflags, path, uuid.toString().toByteArray()))
@@ -164,13 +168,14 @@ class FileResolver(
             ))
         }
 
-        if (path == "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/com.tencent.mobileqq-xJKJPVp9lorkCgR_w5zhyA==/lib/arm64") {
-            return FileResult.success(DirectoryFileIO(oflags, path,
-                DirectoryFileIO.DirectoryEntry(true, "libfekit.so"),
-            ))
+        if (path == "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/${vm.envData.packageName}-xJKJPVp9lorkCgR_w5zhyA==/lib/arm64") {
+            //return FileResult.success(DirectoryFileIO(oflags, path,
+            //   DirectoryFileIO.DirectoryEntry(true, "libfekit.so"),
+            //   DirectoryFileIO.DirectoryEntry(true, "libpoxy.so"),
+            //))
         }
 
-        if(path == "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/com.tencent.mobileqq-xJKJPVp9lorkCgR_w5zhyA==/base.apk") {
+        if(path == "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/${vm.envData.packageName}-xJKJPVp9lorkCgR_w5zhyA==/base.apk") {
             val f = tmpFilePath.resolve("QQ.apk")
             if (f.exists()) {
                 return FileResult.success(SimpleFileIO(oflags, tmpFilePath.resolve("QQ.apk").also {
@@ -181,10 +186,16 @@ class FileResolver(
             }
         }
 
-        if (path == "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/com.tencent.mobileqq-xJKJPVp9lorkCgR_w5zhyA==/lib/arm64/libfekit.so") {
-            return FileResult.success(SimpleFileIO(oflags, tmpFilePath.resolve("libfekit.so").also {
-                if (!it.exists()) it.createNewFile()
-            }, path))
+        if (path == "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/${vm.envData.packageName}-xJKJPVp9lorkCgR_w5zhyA==/lib/arm64/libfekit.so") {
+            return FileResult.success(SimpleFileIO(oflags, tmpFilePath.resolve("libfekit.so"), path))
+        }
+
+        if (path == "/data/app/~~vbcRLwPxS0GyVfqT-nCYrQ==/${vm.envData.packageName}-xJKJPVp9lorkCgR_w5zhyA==/lib/arm64/libwtecdh.so") {
+            tmpFilePath.resolve("libwtecdh.so").let {
+                if (it.exists()) {
+                    return FileResult.success(SimpleFileIO(oflags, it, path))
+                }
+            }
         }
 
         if (path == "/system/bin/sh" || path == "/system/bin/ls" || path == "/system/lib/libc.so") {
