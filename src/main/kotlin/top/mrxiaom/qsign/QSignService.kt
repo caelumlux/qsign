@@ -35,6 +35,12 @@ class QSignService(
     private var channel0: EncryptService.ChannelProxy? = null
     private val channel: EncryptService.ChannelProxy get() = channel0 ?: throw IllegalStateException("need initialize")
     private val token = java.util.concurrent.atomic.AtomicBoolean(false)
+    data class RegisterData(
+        val androidId: String,
+        val guid: String,
+        val qimei36: String
+    )
+    private val registerData = mutableMapOf<Long, RegisterData>()
     @OptIn(MiraiInternalApi::class)
     override fun initialize(context: EncryptServiceContext) {
         val device = context.extraArgs[KEY_DEVICE_INFO]
@@ -43,12 +49,13 @@ class QSignService(
 
         logger.info("register ${context.id}")
 
-        UnidbgFetchQSign.register(
-            context.id,
+        registerData[context.id] = RegisterData(
             device.androidId.decodeToString(),
             device.guid.toUHexString(""),
             context.extraArgs[KEY_QIMEI36]
-        )
+        ).apply {
+            UnidbgFetchQSign.register(context.id, androidId, guid, qimei36)
+        }
     }
 
     override fun encryptTlv(
@@ -61,11 +68,15 @@ class QSignService(
 
         logger.info("energy $command")
 
+        val reg = registerData[context.id]
         return runBlocking {
             UnidbgFetchQSign.customEnergy(
                 context.id,
                 command,
-                payload
+                payload,
+                reg?.androidId ?: "",
+                reg?.guid ?: "",
+                reg?.qimei36 ?: ""
             )
         }
     }
@@ -96,7 +107,16 @@ class QSignService(
 
         logger.verbose("sign $commandName")
         val data = runBlocking {
-            UnidbgFetchQSign.sign(uin = context.id, cmd = commandName, seq = sequenceId, buffer = payload)
+            val reg = registerData[context.id]
+            UnidbgFetchQSign.sign(
+                uin = context.id,
+                cmd = commandName,
+                seq = sequenceId,
+                buffer = payload,
+                androidId = reg?.androidId ?: "",
+                guid = reg?.guid ?: "",
+                qimei36 = reg?.qimei36 ?: ""
+            )
         }
 
         callback(uin = context.id, request = data.requestCallback)

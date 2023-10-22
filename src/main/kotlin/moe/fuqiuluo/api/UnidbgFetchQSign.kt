@@ -24,12 +24,12 @@ import java.nio.ByteBuffer
 import kotlin.concurrent.timer
 
 object UnidbgFetchQSign {
-    suspend fun customEnergy(uin: Long, cmd: String, salt: ByteArray, androidId: String? = null, guid: ByteArray? = null): ByteArray {
+    suspend fun customEnergy(uin: Long, cmd: String, salt: ByteArray, androidId: String? = null, guid: String? = null, qimei36: String = ""): ByteArray {
         val session = initSession(uin) ?: run {
             if (androidId.isNullOrEmpty() || guid == null) {
                 throw MissingKeyError
             }
-            SessionManager.register(EnvData(uin, androidId, guid.toUHexString("").lowercase(), "", CONFIG.protocol.qua, CONFIG.protocol.version, CONFIG.protocol.code))
+            SessionManager.register(EnvData(uin, androidId, guid, qimei36, CONFIG.protocol.qua, CONFIG.protocol.version, CONFIG.protocol.code))
 
             findSession(uin)
         }
@@ -261,11 +261,7 @@ object UnidbgFetchQSign {
     }
 
     fun initSession(uin: Long): Session? {
-        return SessionManager.get(uin) ?: if (!CONFIG.autoRegister) {
-            throw SessionNotFoundError
-        } else {
-            null
-        }
+        return SessionManager.get(uin)
     }
 
     fun findSession(uin: Long): Session {
