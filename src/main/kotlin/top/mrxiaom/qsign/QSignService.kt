@@ -8,6 +8,7 @@ import kotlinx.serialization.json.jsonObject
 import moe.fuqiuluo.api.UnidbgFetchQSign
 import moe.fuqiuluo.comm.QSignConfig
 import moe.fuqiuluo.comm.checkIllegal
+import moe.fuqiuluo.unidbg.session.SessionManager
 import net.mamoe.mirai.internal.spi.EncryptService
 import net.mamoe.mirai.internal.spi.EncryptServiceContext
 import net.mamoe.mirai.internal.spi.EncryptServiceContext.Companion.KEY_BOT_PROTOCOL
@@ -41,6 +42,12 @@ class QSignService(
         val qimei36: String
     )
     private val registerData = mutableMapOf<Long, RegisterData>()
+    private fun checkReg(uin: Long) {
+        val reg = registerData[uin]
+        if (!SessionManager.contains(uin) && reg != null) {
+            UnidbgFetchQSign.register(uin, reg.androidId, reg.guid, reg.qimei36)
+        }
+    }
     @OptIn(MiraiInternalApi::class)
     override fun initialize(context: EncryptServiceContext) {
         val device = context.extraArgs[KEY_DEVICE_INFO]
@@ -87,12 +94,16 @@ class QSignService(
         commandName: String,
         payload: ByteArray
     ): EncryptService.SignResult? {
+
+        checkReg(context.id)
+
         if (commandName == "StatSvc.register") {
             if (!token.get() && token.compareAndSet(false, true)) {
                 launch(CoroutineName("RequestToken")) {
                     while (isActive) {
                         delay(2400000L)
                         val request = try {
+                            checkReg(context.id)
                             UnidbgFetchQSign.requestToken(context.id)
                         } catch (cause: Throwable) {
                             logger.error(cause)
@@ -142,7 +153,7 @@ class QSignService(
                     logger.debug("${callback.cmd} ChannelResult is null")
                     continue
                 }
-
+                checkReg(uin)
                 UnidbgFetchQSign.submit(uin = uin, cmd = result.cmd, callbackId = callback.callbackId, buffer = result.data)
             }
         }
