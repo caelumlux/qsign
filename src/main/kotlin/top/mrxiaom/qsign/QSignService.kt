@@ -149,7 +149,7 @@ class QSignService(
     }
 
     companion object {
-        private val logger = MiraiLogger.Factory.create(QSignService::class)
+        internal val logger = MiraiLogger.Factory.create(QSignService::class)
     }
     class Factory : EncryptService.Factory {
         override val priority: Int = -1919

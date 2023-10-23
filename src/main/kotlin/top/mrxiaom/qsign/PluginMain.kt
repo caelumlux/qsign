@@ -71,6 +71,7 @@ object PluginMain : KotlinPlugin(
         globalEventChannel().run {
             subscribeAlways<BotOfflineEvent> {
                 UnidbgFetchQSign.destory(it.bot.id)
+                QSignService.logger.info("destory ${it.bot.id}")
             }
         }
     }
