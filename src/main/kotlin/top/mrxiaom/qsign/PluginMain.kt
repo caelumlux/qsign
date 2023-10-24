@@ -30,7 +30,6 @@ object PluginMain : KotlinPlugin(
             logger.warning("本插件不支持在 Termux 中运行，请尝试使用 fix-protocol-version")
             logger.warning("若执意想在 Termux 中使用本插件，请到 config/top.mrxiaom.qsign/config.yml 将 ignore-termux 开启")
             exitProcess(1)
-            return
         }
         if (Factory.cmdWhiteList.isEmpty()) {
             logger.warning("cmd whitelist 为空，签名服务将停止加载")
@@ -68,7 +67,7 @@ object PluginMain : KotlinPlugin(
         globalEventChannel().run {
             subscribeAlways<BotOfflineEvent> {
                 UnidbgFetchQSign.destroy(it.bot.id)
-                QSignService.logger.info("destory ${it.bot.id}")
+                QSignService.logger.info("destroy ${it.bot.id}")
             }
         }
     }
