@@ -45,6 +45,16 @@ object SessionManager {
         }
     }
 
+    private fun WorkerPool?.isWorkerStopped(): Boolean {
+        return if (this == null) return true else try {
+            val field = this::class.java.getField("stopped")
+            field.isAccessible = true
+            field.get(this) as Boolean
+        } catch (ignored: Throwable) {
+            true
+        }
+    }
+
     operator fun contains(uin: Long) = envDataByUin.containsKey(uin)
 
     fun register(envData: EnvData) {
@@ -56,12 +66,12 @@ object SessionManager {
         }
 
         envDataByUin[envData.uin] = envData
-        if (workerPoolMap.containsKey(0) && QSignService.Factory.CONFIG.shareToken) {
-            return
+        val stopped = workerPoolMap[if (QSignService.Factory.CONFIG.shareToken) 0 else envData.uin].isWorkerStopped()
+        if (stopped || !(workerPoolMap.containsKey(0) && QSignService.Factory.CONFIG.shareToken)) {
+            workerPoolMap[if (QSignService.Factory.CONFIG.shareToken) 0 else envData.uin] = WorkerPoolFactory.create({ pool ->
+                Session(envData, pool)
+            }, QSignService.Factory.CONFIG.count)
         }
-        workerPoolMap[if (QSignService.Factory.CONFIG.shareToken) 0 else envData.uin] = WorkerPoolFactory.create({ pool ->
-            Session(envData, pool)
-        }, QSignService.Factory.CONFIG.count)
     }
 
     fun close(uin: Long) {
