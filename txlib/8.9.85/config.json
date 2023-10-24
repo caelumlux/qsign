@@ -3,7 +3,7 @@
     "host": "0.0.0.0",
     "port": 2535
   },
-  "share_token": true,
+  "share_token": false,
   "count": 1,
   "key": "TimeRainStarSky",
   "auto_register": true,
