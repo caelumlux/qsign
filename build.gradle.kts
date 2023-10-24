@@ -9,7 +9,7 @@ plugins {
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.22"
-    id("net.mamoe.mirai-console") version "2.16.0-RC"
+    id("net.mamoe.mirai-console") version "2.16.0"
     id("com.github.gmazzo.buildconfig") version "3.1.0"
 }
 
@@ -35,7 +35,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation(platform("net.mamoe:mirai-bom:2.16.0-RC"))
+    implementation(platform("net.mamoe:mirai-bom:2.16.0"))
     compileOnly("net.mamoe:mirai-core")
     compileOnly("net.mamoe:mirai-core-utils")
     compileOnly("net.mamoe:mirai-console-compiler-common")
