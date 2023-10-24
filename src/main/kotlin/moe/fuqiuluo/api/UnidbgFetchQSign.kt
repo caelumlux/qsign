@@ -4,11 +4,9 @@ import com.tencent.crypt.Crypt
 import com.tencent.mobileqq.channel.ChannelManager
 import com.tencent.mobileqq.channel.SsoPacket
 import com.tencent.mobileqq.qsec.qsecdandelionsdk.Dandelion
-import com.tencent.mobileqq.qsec.qsecurity.QSec
 import com.tencent.mobileqq.sign.QQSecuritySign
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
@@ -19,7 +17,6 @@ import moe.fuqiuluo.unidbg.session.SessionManager
 import moe.fuqiuluo.utils.EMPTY_BYTE_ARRAY
 import moe.fuqiuluo.utils.MD5
 import net.mamoe.mirai.utils.toUHexString
-import top.mrxiaom.qsign.QSignService
 import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
 import java.nio.ByteBuffer
 import kotlin.concurrent.timer
@@ -59,15 +56,14 @@ object UnidbgFetchQSign {
         if (!(data.startsWith("810_") || data.startsWith("812_"))) {
             error("data参数不合法")
         }
-        val mode: String?
-        if (modeString != null) mode = modeString
-        else mode = when (data) {
-            "810_d", "810_a", "810_f", "810_9" -> "v2"
-            "810_2", "810_25", "810_7", "810_24" -> "v1"
-            "812_a" -> "v3"
-            "812_5" -> "v4"
-            else -> ""
-        }
+        val mode = modeString
+            ?: when (data) {
+                "810_d", "810_a", "810_f", "810_9" -> "v2"
+                "810_2", "810_25", "810_7", "810_24" -> "v1"
+                "812_a" -> "v3"
+                "812_5" -> "v4"
+                else -> ""
+            }
         if (mode.isBlank()) error("无法自动决断mode，请主动提供")
 
 
@@ -180,8 +176,8 @@ object UnidbgFetchQSign {
         val sign = session.withLock {
             QQSecuritySign.getSign(vm, qua, cmd, buffer, seq, uin.toString()).value.also {
                 o3did = vm.global["o3did"] as? String ?: ""
-                val requiredPacket = vm.global["PACKET"] as ArrayList<SsoPacket>
-                list.addAll(requiredPacket)
+                val requiredPacket = vm.global["PACKET"] as ArrayList<*>
+                list.addAll(requiredPacket.map { it as SsoPacket })
                 requiredPacket.clear()
             }
         }
@@ -216,14 +212,14 @@ object UnidbgFetchQSign {
         return hasRegister
     }
 
-    fun destory(
+    fun destroy(
         uin: Long
     ): Boolean {
-        if (uin in SessionManager) {
+        return if (uin in SessionManager) {
             SessionManager.close(uin)
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 
@@ -264,8 +260,8 @@ object UnidbgFetchQSign {
 
                 withTimeoutOrNull(5000) {
                     lock.withLock {
-                        val requiredPacket = vm.global["PACKET"] as ArrayList<SsoPacket>
-                        list.addAll(requiredPacket)
+                        val requiredPacket = vm.global["PACKET"] as ArrayList<*>
+                        list.addAll(requiredPacket.map { it as SsoPacket })
                         requiredPacket.clear()
                     }
                 } ?: {
@@ -305,7 +301,7 @@ object UnidbgFetchQSign {
         }
     }
 
-    fun initSession(uin: Long): Session? {
+    private fun initSession(uin: Long): Session? {
         return SessionManager[uin] ?: if (!CONFIG.autoRegister) {
             throw SessionNotFoundError(uin)
         } else {
@@ -313,10 +309,10 @@ object UnidbgFetchQSign {
         }
     }
 
-    fun findSession(uin: Long): Session {
+    private fun findSession(uin: Long): Session {
         return SessionManager[uin] ?: throw SessionNotFoundError(uin)
     }
-    internal suspend inline fun <T> Session.withLock(action: () -> T): T {
+    private suspend inline fun <T> Session.withLock(action: () -> T): T {
         return mutex.withLockAndTimeout(5000, action)
     }
     @OptIn(ExperimentalContracts::class)

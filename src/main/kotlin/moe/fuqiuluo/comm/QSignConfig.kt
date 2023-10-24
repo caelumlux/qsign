@@ -57,7 +57,6 @@ data class QSignConfig(
     @JsonNames("blackList", "black_list")
     var blackList: List<Long>? = null,
     var count: Int = 1,
-    @SerialName("share_token") var shareToken: Boolean = false
 )
 
 fun QSignConfig.checkIllegal() {
