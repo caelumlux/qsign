@@ -108,6 +108,7 @@ class QSignService(
                             val reg = registerData[context.id]
                             UnidbgFetchQSign.requestToken(
                                 uin = context.id,
+                                isForced = true,
                                 androidId = reg?.androidId ?: "",
                                 guid = reg?.guid ?: "",
                                 qimei36 = reg?.qimei36 ?: ""
