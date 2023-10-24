@@ -5,6 +5,7 @@ import com.tencent.mobileqq.dt.model.FEBound
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
+import moe.fuqiuluo.api.SessionNotFoundError
 import moe.fuqiuluo.api.UnidbgFetchQSign
 import moe.fuqiuluo.comm.QSignConfig
 import moe.fuqiuluo.comm.checkIllegal
@@ -104,9 +105,16 @@ class QSignService(
                         delay(2400000L)
                         val request = try {
                             checkReg(context.id)
-                            UnidbgFetchQSign.requestToken(context.id)
+                            val reg = registerData[context.id]
+                            UnidbgFetchQSign.requestToken(
+                                uin = context.id,
+                                androidId = reg?.androidId ?: "",
+                                guid = reg?.guid ?: "",
+                                qimei36 = reg?.qimei36 ?: ""
+                            )
                         } catch (cause: Throwable) {
-                            logger.error(cause)
+                            val reg = registerData[context.id]
+                            logger.error("requestToken: registerData ${if (reg == null) "==" else "!="} null", cause)
                             continue
                         }
                         if (request.first) callback(uin = context.id, request = request.second)
@@ -154,7 +162,16 @@ class QSignService(
                     continue
                 }
                 checkReg(uin)
-                UnidbgFetchQSign.submit(uin = uin, cmd = result.cmd, callbackId = callback.callbackId, buffer = result.data)
+                val reg = registerData[uin]
+                UnidbgFetchQSign.submit(
+                    uin = uin,
+                    cmd = result.cmd,
+                    callbackId = callback.callbackId,
+                    buffer = result.data,
+                    androidId = reg?.androidId ?: "",
+                    guid = reg?.guid ?: "",
+                    qimei36 = reg?.qimei36 ?: ""
+                )
             }
         }
     }

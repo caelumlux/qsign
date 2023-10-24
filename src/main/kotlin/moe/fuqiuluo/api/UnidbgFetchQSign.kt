@@ -19,6 +19,7 @@ import moe.fuqiuluo.unidbg.session.SessionManager
 import moe.fuqiuluo.utils.EMPTY_BYTE_ARRAY
 import moe.fuqiuluo.utils.MD5
 import net.mamoe.mirai.utils.toUHexString
+import top.mrxiaom.qsign.QSignService
 import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
 import java.nio.ByteBuffer
 import kotlin.concurrent.timer
@@ -228,9 +229,26 @@ object UnidbgFetchQSign {
 
     suspend fun requestToken(
         uin: Long,
-        isForced: Boolean = false
+        isForced: Boolean = false,
+        androidId: String = "",
+        guid: String = "",
+        qimei36: String = "",
     ): Pair<Boolean, List<SsoPacket>> {
-        val session = findSession(uin)
+        val session = initSession(uin) ?: run {
+            if (androidId.isEmpty() || guid.isEmpty()) {
+                throw MissingKeyError
+            }
+            SessionManager.register(EnvData(
+                uin,
+                androidId,
+                guid.lowercase(),
+                qimei36,
+                CONFIG.protocol.qua,
+                CONFIG.protocol.version,
+                CONFIG.protocol.code
+            ))
+            findSession(uin)
+        }
 
         val vm = session.vm
 
@@ -251,9 +269,26 @@ object UnidbgFetchQSign {
         uin: Long,
         cmd: String,
         callbackId: Long,
-        buffer: ByteArray
+        buffer: ByteArray,
+        androidId: String = "",
+        guid: String = "",
+        qimei36: String = "",
     ) {
-        val session = findSession(uin)
+        val session = initSession(uin) ?: run {
+            if (androidId.isEmpty() || guid.isEmpty()) {
+                throw MissingKeyError
+            }
+            SessionManager.register(EnvData(
+                uin,
+                androidId,
+                guid.lowercase(),
+                qimei36,
+                CONFIG.protocol.qua,
+                CONFIG.protocol.version,
+                CONFIG.protocol.code
+            ))
+            findSession(uin)
+        }
         session.withRuntime {
             ChannelManager.onNativeReceive(session.vm, cmd, buffer, callbackId)
             session.vm.global["HAS_SUBMIT"] = true
@@ -265,7 +300,7 @@ object UnidbgFetchQSign {
     }
 
     fun findSession(uin: Long): Session {
-        return SessionManager.get(uin) ?: throw SessionNotFoundError
+        return SessionManager.get(uin) ?: throw SessionNotFoundError(uin)
     }
 
     inline fun <T> Session.withRuntime(crossinline action: () -> T): T? {
@@ -283,6 +318,6 @@ class Sign(
     val requestCallback: List<SsoPacket>
 )
 
-object SessionNotFoundError: RuntimeException("Uin is not registered.")
+class SessionNotFoundError(val uin: Long): RuntimeException("Uin $uin is not registered.")
 
 object MissingKeyError: RuntimeException("First use must be submitted with android_id and guid.")
