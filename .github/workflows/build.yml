@@ -9,9 +9,12 @@ on:
     paths-ignore:
       - '*.md'
 permissions:
-  contents: read
+  contents: write
 jobs:
   build:
+    permissions:
+      contents: write
+      packages: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,3 +36,13 @@ jobs:
           name: qsign-${{ env.SHORT_SHA }}-all
           path: qsign-*-all.zip
           if-no-files-found: error
+      - name: Upload to Release
+        if: ${{ vars.NEED_TO_UPLOAD_RELEASE }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "qsign-*-all.zip"
+          allowUpdates: true
+          omitNameDuringUpdate: true
+          omitBodyDuringUpdate: true
+          tag: ${{ vars.UPLOAD_RELEASE_TAG }}
+          token: ${{ secrets.GITHUB_TOKEN }}
