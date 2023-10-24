@@ -35,10 +35,10 @@ object UnidbgFetchQSign {
             findSession(uin)
         }
 
-        val sign = session.withRuntime {
+        val sign = session.withLock {
             Dandelion.energy(session.vm, cmd, salt)
         }
-        return sign ?: error("sign == null")
+        return sign
     }
 
     suspend fun energy(
@@ -137,10 +137,10 @@ object UnidbgFetchQSign {
             }
         }
 
-        val sign = session.withRuntime  {
+        val sign = session.withLock  {
             Dandelion.energy(session.vm, data, salt)
         }
-        return sign ?: error("sign == null")
+        return sign
     }
 
 
@@ -177,7 +177,7 @@ object UnidbgFetchQSign {
         var o3did = ""
         val list = arrayListOf<SsoPacket>()
 
-        val sign = session.withRuntime {
+        val sign = session.withLock {
             QQSecuritySign.getSign(vm, qua, cmd, buffer, seq, uin.toString()).value.also {
                 o3did = vm.global["o3did"] as? String ?: ""
                 val requiredPacket = vm.global["PACKET"] as ArrayList<SsoPacket>
@@ -186,7 +186,7 @@ object UnidbgFetchQSign {
             }
         }
 
-        return (sign ?: error("sign == null")).run {
+        return sign.run {
             Sign(
                 this.token,
                 this.extra,
@@ -255,12 +255,22 @@ object UnidbgFetchQSign {
         if ("HAS_SUBMIT" !in vm.global && !isForced) {
             error("QSign not initialized, unable to request_token, please submit the initialization package first.")
         } else {
-            val isSuccessful = true
+            var isSuccessful = true
             val list = arrayListOf<SsoPacket>()
-            session.withRuntime {
+            session.withLock {
                 val lock = vm.global["mutex"] as Mutex
                 lock.tryLock()
                 QQSecuritySign.requestToken(vm)
+
+                withTimeoutOrNull(5000) {
+                    lock.withLock {
+                        val requiredPacket = vm.global["PACKET"] as ArrayList<SsoPacket>
+                        list.addAll(requiredPacket)
+                        requiredPacket.clear()
+                    }
+                } ?: {
+                    isSuccessful = false
+                }
             }
             return Pair(!isSuccessful, list)
         }
@@ -289,24 +299,47 @@ object UnidbgFetchQSign {
             ))
             findSession(uin)
         }
-        session.withRuntime {
+        session.withLock {
             ChannelManager.onNativeReceive(session.vm, cmd, buffer, callbackId)
             session.vm.global["HAS_SUBMIT"] = true
         }
     }
 
     fun initSession(uin: Long): Session? {
-        return SessionManager.get(uin)
+        return SessionManager[uin] ?: if (!CONFIG.autoRegister) {
+            throw SessionNotFoundError(uin)
+        } else {
+            null
+        }
     }
 
     fun findSession(uin: Long): Session {
-        return SessionManager.get(uin) ?: throw SessionNotFoundError(uin)
+        return SessionManager[uin] ?: throw SessionNotFoundError(uin)
     }
+    internal suspend inline fun <T> Session.withLock(action: () -> T): T {
+        return mutex.withLockAndTimeout(5000, action)
+    }
+    @OptIn(ExperimentalContracts::class)
+    private suspend inline fun <T> Mutex.withLockAndTimeout(timeout: Long, action: () -> T): T {
+        contract {
+            callsInPlace(action, InvocationKind.EXACTLY_ONCE)
+        }
 
-    inline fun <T> Session.withRuntime(crossinline action: () -> T): T? {
-        val t = action()
-        pool.release(this)
-        return t
+        lock()
+        val job = timer(initialDelay = timeout, period = timeout) {
+            if (isLocked)
+                unlock()
+        }
+        try {
+            return action().also {
+                job.cancel()
+            }
+        } finally {
+            if (isLocked) try {
+                unlock()
+            } catch (_: java.lang.Exception) {
+            }
+        }
     }
 }
 

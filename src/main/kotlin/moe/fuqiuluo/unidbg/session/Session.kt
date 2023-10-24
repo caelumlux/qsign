@@ -10,12 +10,10 @@ import moe.fuqiuluo.comm.EnvData
 import moe.fuqiuluo.unidbg.QSecVM
 import top.mrxiaom.qsign.QSignService
 
-class Session(
-    envData: EnvData,
-    val pool: WorkerPool
-): Worker(pool) {
+class Session(envData: EnvData) {
     internal val vm: QSecVM =
         QSecVM(QSignService.Factory.basePath, envData, CONFIG.unidbg.dynarmic, CONFIG.unidbg.unicorn, CONFIG.unidbg.kvm)
+    internal val mutex = Mutex()
 
     init {
         vm.global["PACKET"] = arrayListOf<SsoPacket>()
@@ -24,9 +22,5 @@ class Session(
         vm.global["guid"] = envData.guid.lowercase()
         vm.init()
         FEKit.init(vm, envData.uin.toString())
-    }
-
-    override fun destroy() {
-        vm.destroy()
     }
 }
