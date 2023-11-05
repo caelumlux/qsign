@@ -1,57 +1,56 @@
 package moe.fuqiuluo.unidbg.env.files
 
 fun fetchStatus(pid: Int): String {
-    return buildString {
-        append("Name:\tencent.mobileqq\n")
-        append("Umask:\t0077\n")
-        append("State:\tS (sleeping)\n")
-        append("Tgid:\t$pid\n")
-        append("Ngid:\t0\n")
-        append("Pid:\t$pid\n")
-        append("PPid:\t1180\n")
-        append("TracerPid:\t0\n")
-        append("Uid:\t10281\t10281\t10281\t10281\n")
-        append("Gid:\t10281\t10281\t10281\t10281\n")
-        append("FDSize:\t1024\n")
-        append("Groups:\t1079 3001 3002 3003 9997 20281 50281 99909997 \n")
-        append("VmPeak:\t76966256 kB\n")
-        append("VmSize:\t74489196 kB\n")
-        append("VmLck:\t       0 kB\n")
-        append("VmPin:\t       0 kB\n")
-        append("VmHWM:\t 1332896 kB\n")
-        append("VmRSS:\t  653604 kB\n")
-        append("RssAnon:\t  481564 kB\n")
-        append("RssFile:\t  156120 kB\n")
-        append("RssShmem:\t   15920 kB\n")
-        append("VmData:\t 7587328 kB\n")
-        append("VmStk:\t    8192 kB\n")
-        append("VmExe:\t       8 kB\n")
-        append("VmLib:\t  432720 kB\n")
-        append("VmPTE:\t    7252 kB\n")
-        append("VmSwap:\t       0 kB\n")
-        append("CoreDumping:\t0\n")
-        append("THP_enabled:\t1\n")
-        append("Threads:\t373\n")
-        append("SigQ:\t0/42559\n")
-        append("SigPnd:\t0000000000000000\n")
-        append("ShdPnd:\t0000000000000000\n")
-        append("SigBlk:\t0000000080001200\n")
-        append("SigIgn:\t0000000000001001\n")
-        append("SigCgt:\t0000006e400086fc\n")
-        append("CapInh:\t0000000000000000\n")
-        append("CapPrm:\t0000000000000000\n")
-        append("CapEff:\t0000000000000000\n")
-        append("CapBnd:\t0000000000000000\n")
-        append("CapAmb:\t0000000000000000\n")
-        append("NoNewPrivs:\t0\n")
-        append("Seccomp:\t2\n")
-        append("Seccomp_filters:\t1\n")
-        append("Speculation_Store_Bypass:\tthread vulnerable\n")
-        append("Cpus_allowed:\t07\n")
-        append("Cpus_allowed_list:\t0-2\n")
-        append("Mems_allowed:\t1\n")
-        append("Mems_allowed_list:\t0\n")
-        append("voluntary_ctxt_switches:\t819637\n")
-        append("nonvoluntary_ctxt_switches:\t82707\n")
-    }
+    return """
+        Name:	encent.mobileqq
+        Umask:	0077
+        State:	R (running)
+        Tgid:	$pid
+        Ngid:	0
+        Pid:	$pid
+        PPid:	852
+        TracerPid:	0
+        Uid:	10251	10251	10251	10251
+        Gid:	10251	10251	10251	10251
+        FDSize:	4096
+        Groups:	3001 3002 3003 9997 20251 50251 99909997 
+        VmPeak:	52344948 kB
+        VmSize:	50430668 kB
+        VmLck:	       0 kB
+        VmPin:	       0 kB
+        VmHWM:	  669512 kB
+        VmRSS:	  248636 kB
+        RssAnon:	  113156 kB
+        RssFile:	  130144 kB
+        RssShmem:	    5336 kB
+        VmData:	 6597232 kB
+        VmStk:	    8192 kB
+        VmExe:	      16 kB
+        VmLib:	  319280 kB
+        VmPTE:	    4380 kB
+        VmSwap:	  288924 kB
+        CoreDumping:	0
+        THP_enabled:	0
+        Threads:	265
+        SigQ:	1/28913
+        SigPnd:	0000000000000000
+        ShdPnd:	0000000000000000
+        SigBlk:	0000000080001200
+        SigIgn:	0000000000001001
+        SigCgt:	0000006e400086fc
+        CapInh:	0000000000000000
+        CapPrm:	0000000000000000
+        CapEff:	0000000000000000
+        CapBnd:	0000000000000000
+        CapAmb:	0000000000000000
+        NoNewPrivs:	0
+        Seccomp:	2
+        Speculation_Store_Bypass:	thread vulnerable
+        Cpus_allowed:	07
+        Cpus_allowed_list:	0-2
+        Mems_allowed:	1
+        Mems_allowed_list:	0
+        voluntary_ctxt_switches:	49881
+        nonvoluntary_ctxt_switches:	10179
+    """.trimIndent()
 }

@@ -15,4 +15,25 @@ object PluginConfig : ReadOnlyPluginConfig("config") {
        如果你执意要在 Termux 中使用本插件，请开启本选项
        """)
     val ignoreTermux by value(false)
+    @ValueName("app_install_folder")
+    val appInstallFolder by value("/data/app/~~nNzv5koU9DgkrbtCpa02wQ==/\${packageName}-fR9VqAFGIZNVZ8MgZYh0Ow==")
+    @ValueName("screen_size_width")
+    val screenSizeWidth by value(1080)
+    @ValueName("screen_size_height")
+    val screenSizeHeight by value(2400)
+    @ValueName("density")
+    val density by value("2.75")
+    @ValueName("serial_number")
+    @ValueDescription("""
+       /sys/devices/soc0/serial_number
+       """)
+    val serialNumber by value("0x0000043be8571339")
+    @ValueName("android_version")
+    val androidVersion by value("13")
+    @ValueName("android_sdk_version")
+    val androidSdkVersion by value(33)
+    @ValueName("target_sdk_version")
+    val targetSdkVersion by value(29)
+    @ValueName("storage_size")
+    val storageSize by value("137438953471")
 }
