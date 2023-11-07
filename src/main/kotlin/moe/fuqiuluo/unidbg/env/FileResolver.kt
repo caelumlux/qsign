@@ -139,7 +139,7 @@ class FileResolver(
             || path == "/proc/stat/cmdline" // an error case
         ) {
             //if (vm.envData.packageName == "com.tencent.tim") {
-                return FileResult.success(ByteArrayFileIO(oflags, path, vm.envData.packageName.toByteArray()))
+            return FileResult.success(ByteArrayFileIO(oflags, path, "${vm.envData.packageName}:MSF".toByteArray()))
             //} else {
             //    return FileResult.success(ByteArrayFileIO(oflags, path, "${vm.envData.packageName}:MSF".toByteArray()))
             //}
