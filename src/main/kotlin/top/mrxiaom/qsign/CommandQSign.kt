@@ -19,7 +19,7 @@ object CommandQSign : SimpleCommand(
                 "可用签名服务版本列表:\n" +
                 File("txlib").run {
                     if (!exists()) return@run "  (无)"
-                    "  " + listFiles().map { it.name }.joinToString("\n  ")
+                    "  " + listFiles()?.filter { it.isDirectory }?.joinToString("\n  ") { it.name }
                 }
             )
         } else {
