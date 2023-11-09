@@ -24,6 +24,7 @@ object PluginMain : KotlinPlugin(
 ) {
     val isTermux = File("/data/data/com.termux").exists()
     override fun PluginComponentStorage.onLoad() {
+        CommonConfig.virtualRootPath = dataFolder
         PluginConfig.reload()
         PluginConfig.save()
         if (isTermux && !PluginConfig.ignoreTermux) {

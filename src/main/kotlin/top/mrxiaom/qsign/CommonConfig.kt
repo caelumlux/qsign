@@ -1,6 +1,10 @@
 package top.mrxiaom.qsign
 
+import java.io.File
+
 object CommonConfig {
+    @JvmStatic
+    var virtualRootPath : File? = null
     @JvmStatic
     var appInstallFolder = "/data/app/~~nNzv5koU9DgkrbtCpa02wQ==/\${packageName}-fR9VqAFGIZNVZ8MgZYh0Ow=="
     @JvmStatic

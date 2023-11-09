@@ -16,6 +16,7 @@ import moe.fuqiuluo.unidbg.env.files.fetchStat
 import moe.fuqiuluo.unidbg.env.files.fetchStatus
 import net.mamoe.mirai.utils.MiraiLogger
 import top.mrxiaom.qsign.CommonConfig
+import java.io.File
 import java.util.UUID
 
 class FileResolver(
@@ -230,6 +231,18 @@ class FileResolver(
                 file.writeBytes("619F9042CA821CF91DFAF172D464FFC7A6CB8E024CC053F7438429FA38E86854471D6B0A9DE4C39BF02DC18C0CC54A715C9210E8A32B284366849CBB7F88C634AA".hex2ByteArray())
             }
             return FileResult.success(SimpleFileIO(oflags, file, newPath))
+        }
+
+        if (CommonConfig.virtualRootPath != null) {
+            val dataFile = File(CommonConfig.virtualRootPath, path)
+            if (dataFile.exists()) {
+                if (dataFile.isFile) {
+                    return FileResult.success(ByteArrayFileIO(oflags, path, dataFile.readBytes()))
+                }
+                if (dataFile.isDirectory) {
+                    return FileResult.success(DirectoryFileIO(oflags, path, dataFile))
+                }
+            }
         }
 
         logger.warning("Couldn't find file: $path")
