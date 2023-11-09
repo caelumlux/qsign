@@ -189,6 +189,11 @@ class FileResolver(
         if (path == "/proc") {
             return FileResult.success(DirectoryFileIO(oflags, path,
                 DirectoryFileIO.DirectoryEntry(false, emulator.pid.toString()),
+                DirectoryFileIO.DirectoryEntry(false, "self"),
+                DirectoryFileIO.DirectoryEntry(true, "cpuinfo"),
+                DirectoryFileIO.DirectoryEntry(true, "meminfo"),
+                DirectoryFileIO.DirectoryEntry(true, "stat"),
+                DirectoryFileIO.DirectoryEntry(true, "version"),
             ))
         }
 
