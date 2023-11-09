@@ -26,7 +26,7 @@ class FileResolver(
     private val tmpFilePath = vm.coreLibPath
     private val uuid = UUID.randomUUID()
     companion object {
-        val logger = MiraiLogger.Factory.create(this::class)
+        val logger = MiraiLogger.Factory.create(FileResolver::class)
 
         fun getAppInstallFolder(packageName: String): String {
             return PluginConfig.appInstallFolder.replace("\${packageName}", packageName)
