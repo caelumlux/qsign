@@ -16,7 +16,7 @@ import moe.fuqiuluo.unidbg.QSecVM
 import moe.fuqiuluo.unidbg.vm.GlobalData
 import net.mamoe.mirai.utils.MiraiLogger
 import net.mamoe.mirai.utils.getRandomIntString
-import top.mrxiaom.qsign.PluginConfig
+import top.mrxiaom.qsign.CommonConfig
 import top.mrxiaom.qsign.QSignService
 import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
 import java.io.File
@@ -35,13 +35,13 @@ class QSecJni(
     val global: GlobalData
 ) : AbstractJni() {
     private val androidVersion
-        get() = PluginConfig.androidVersion
+        get() = CommonConfig.androidVersion
     private val androidSdkVersion
-        get() = PluginConfig.androidSdkVersion
+        get() = CommonConfig.androidSdkVersion
     private val targetSdkVersion
-        get() = PluginConfig.targetSdkVersion
+        get() = CommonConfig.targetSdkVersion
     private val storageSize
-        get() = PluginConfig.storageSize
+        get() = CommonConfig.storageSize
     override fun getStaticIntField(vm: BaseVM, dvmClass: DvmClass, signature: String): Int {
         if (signature == "android/os/Build\$VERSION->SDK_INT:I") {
             return androidSdkVersion
@@ -273,10 +273,10 @@ class QSecJni(
             signature == "com/tencent/mobileqq/dt/app/Dtc->getDensity(Ljava/lang/String;)Ljava/lang/String;" ||
             signature == "com/tencent/mobileqq/dt/app/Dtc->getFontDpi(Ljava/lang/String;)Ljava/lang/String;"
         ) {
-            return StringObject(vm, PluginConfig.density)
+            return StringObject(vm, CommonConfig.density)
         }
         if ("com/tencent/mobileqq/dt/app/Dtc->getScreenSize(Ljava/lang/String;)Ljava/lang/String;" == signature) {
-            return StringObject(vm, "[${PluginConfig.screenSizeWidth},${PluginConfig.screenSizeHeight}]")
+            return StringObject(vm, "[${CommonConfig.screenSizeWidth},${CommonConfig.screenSizeHeight}]")
         }
         if (signature == "com/tencent/mobileqq/dt/app/Dtc->getStorage(Ljava/lang/String;)Ljava/lang/String;") {
             return StringObject(vm, storageSize)

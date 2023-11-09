@@ -1,6 +1,7 @@
 package top.mrxiaom.qsign
 
 import net.mamoe.mirai.console.data.*
+import net.mamoe.mirai.console.util.ConsoleExperimentalApi
 
 object PluginConfig : ReadOnlyPluginConfig("config") {
     @ValueName("base-path")
@@ -36,4 +37,21 @@ object PluginConfig : ReadOnlyPluginConfig("config") {
     val targetSdkVersion by value(29)
     @ValueName("storage_size")
     val storageSize by value("137438953471")
+
+    @OptIn(ConsoleExperimentalApi::class)
+    override fun onInit(owner: PluginDataHolder, storage: PluginDataStorage) {
+        super.onInit(owner, storage)
+        pushToCommonConfig()
+    }
+    private fun pushToCommonConfig() = CommonConfig.also {
+        it.appInstallFolder = appInstallFolder
+        it.screenSizeWidth = screenSizeWidth
+        it.screenSizeHeight = screenSizeHeight
+        it.density = density
+        it.serialNumber = serialNumber
+        it.androidVersion = androidVersion
+        it.androidSdkVersion = androidSdkVersion
+        it.targetSdkVersion = targetSdkVersion
+        it.storageSize = storageSize
+    }
 }

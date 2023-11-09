@@ -15,9 +15,8 @@ import moe.fuqiuluo.unidbg.env.files.fetchMemInfo
 import moe.fuqiuluo.unidbg.env.files.fetchStat
 import moe.fuqiuluo.unidbg.env.files.fetchStatus
 import net.mamoe.mirai.utils.MiraiLogger
-import top.mrxiaom.qsign.PluginConfig
+import top.mrxiaom.qsign.CommonConfig
 import java.util.UUID
-import java.util.logging.Logger
 
 class FileResolver(
     sdk: Int,
@@ -29,7 +28,7 @@ class FileResolver(
         val logger = MiraiLogger.Factory.create(FileResolver::class)
 
         fun getAppInstallFolder(packageName: String): String {
-            return PluginConfig.appInstallFolder.replace("\${packageName}", packageName)
+            return CommonConfig.appInstallFolder.replace("\${packageName}", packageName)
         }
     }
     init {
@@ -171,7 +170,7 @@ class FileResolver(
         }
 
         if (path == "/sys/devices/soc0/serial_number") {
-            return FileResult.success(ByteArrayFileIO(oflags, path, PluginConfig.serialNumber.toByteArray()))
+            return FileResult.success(ByteArrayFileIO(oflags, path, CommonConfig.serialNumber.toByteArray()))
         }
 
         if (path == "/proc") {
