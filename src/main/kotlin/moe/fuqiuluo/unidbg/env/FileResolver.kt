@@ -55,6 +55,18 @@ class FileResolver(
             }, path))
         }
 
+        if (CommonConfig.virtualRootPath != null) {
+            val dataFile = File(CommonConfig.virtualRootPath, path)
+            if (dataFile.exists()) {
+                if (dataFile.isFile) {
+                    return FileResult.success(SimpleFileIO(oflags, dataFile, path))
+                }
+                if (dataFile.isDirectory) {
+                    return FileResult.success(DirectoryFileIO(oflags, path, dataFile))
+                }
+            }
+        }
+
         if (path == "/data/data/com.tencent.tim/lib/libwtecdh.so") {
             return FileResult.failed(UnixEmulator.ENOENT)
         }
@@ -123,7 +135,7 @@ class FileResolver(
             return FileResult.failed(UnixEmulator.ENOENT)
         }
 
-        if (path == "/sdcard/Android/") {
+        if (path == "/sdcard/Android/" || path == "/storage/emulated/0/Android/") {
             return FileResult.success(DirectoryFileIO(oflags, path,
                 DirectoryFileIO.DirectoryEntry(false, "data"),
                 DirectoryFileIO.DirectoryEntry(false, "obb"),
@@ -224,6 +236,7 @@ class FileResolver(
             }
         }
 
+        // 位置: /storage/emulated/0/Android/.android_lq
         if (path.contains("system_android_l2") || path.contains("android_lq")) {
             val newPath = if (path.startsWith("C:")) path.substring(2) else path
             val file = tmpFilePath.resolve(".system_android_l2")
@@ -233,17 +246,6 @@ class FileResolver(
             return FileResult.success(SimpleFileIO(oflags, file, newPath))
         }
 
-        if (CommonConfig.virtualRootPath != null) {
-            val dataFile = File(CommonConfig.virtualRootPath, path)
-            if (dataFile.exists()) {
-                if (dataFile.isFile) {
-                    return FileResult.success(ByteArrayFileIO(oflags, path, dataFile.readBytes()))
-                }
-                if (dataFile.isDirectory) {
-                    return FileResult.success(DirectoryFileIO(oflags, path, dataFile))
-                }
-            }
-        }
 
         logger.warning("Couldn't find file: $path")
         return def
