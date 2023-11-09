@@ -241,7 +241,7 @@ class FileResolver(
             val newPath = if (path.startsWith("C:")) path.substring(2) else path
             val file = tmpFilePath.resolve(".system_android_l2")
             if (!file.exists()) {
-                file.writeBytes("619F9042CA821CF91DFAF172D464FFC7A6CB8E024CC053F7438429FA38E86854471D6B0A9DE4C39BF02DC18C0CC54A715C9210E8A32B284366849CBB7F88C634AA".hex2ByteArray())
+                file.writeBytes("613E7F36143E459381A20F92C04C71E7DF53D0197863ACD2CFC31D7D87D34CB96E1CB97AC6530FE75E779465CF0D682420DEC56A368C8D25FFA22C4E005AD7DB04".hex2ByteArray())
             }
             return FileResult.success(SimpleFileIO(oflags, file, newPath))
         }
