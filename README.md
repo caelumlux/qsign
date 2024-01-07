@@ -10,6 +10,38 @@
 
 本插件**自带**协议信息，在加载时将会应用与签名服务版本相同的设备信息文件。
 
+# 非未来使用方式
+
+1.3.0 起，恢复了原 http 接口。
+
+到 [瑞丽斯](https://github.com/MrXiaoM/qsign/releases) 下载 `http-x.x.x.zip`，解压后文件夹结构大致情况如下
+```
+|-bin
+|-lib
+|-txlib
+  |-8.9.58
+  |-8.9.63
+    |-android_phone.json
+    |-android_pad.json
+    |-config.json
+    |-dtconfig.json
+    |-libfekit.so
+    |-libQSec.so
+  |-8.9.68
+  |-8.9.70
+  |-8.9.71
+  |-8.9.73
+  |-8.9.76
+  |-8.9.78
+  |-8.9.80
+  |-8.9.83
+```
+打开`cmd`或`终端`，执行以下命令即可启动快信号服务
+```shell
+java -cp lib/* MainKt --basePath=txlib/8.9.80
+```
+如需更换协议版本，请自行替换命令中的`8.9.80`
+
 # 不支持特缪斯
 
 特缪斯请使用 [bak-fpv](https://github.com/MrXiaoM/qsign/tree/bak-fpv)，并在电脑上搭建签名服务，通过局域网连接签名服务。
@@ -158,10 +190,16 @@ dependencies {
 # 编译
 
 编译插件
-```
+```shell
 ./gradlew buildPlugin
 ```
 打包发布 (将会在项目目录生成 `qsign-x.x.x-all.zip`)
-```
+```shell
 ./gradlew deploy
 ```
+打包http服务 (将会在 `http/build/distributions/` 生成 `http-x.x.x.zip`)
+```shell
+./gradlew distZip
+```
+
+为这[一切](https://wiki.mrxiaom.top/mirai/sign.html)画上一个逗号，
