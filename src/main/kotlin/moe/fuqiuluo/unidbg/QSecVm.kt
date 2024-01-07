@@ -7,7 +7,7 @@ import moe.fuqiuluo.unidbg.env.FileResolver
 import moe.fuqiuluo.unidbg.env.QSecJni
 import moe.fuqiuluo.unidbg.vm.AndroidVM
 import moe.fuqiuluo.unidbg.vm.GlobalData
-import net.mamoe.mirai.utils.MiraiLogger
+import org.slf4j.LoggerFactory
 import java.io.File
 import javax.security.auth.Destroyable
 import kotlin.system.exitProcess
@@ -20,7 +20,7 @@ class QSecVM(
     kvm: Boolean
 ): Destroyable, AndroidVM(envData.packageName, dynarmic, unicorn, kvm) {
     companion object {
-        private val logger = MiraiLogger.Factory.create(QSecVM::class)
+        private val logger = LoggerFactory.getLogger("QSecVM")
     }
 
     private var destroy: Boolean = false
@@ -72,7 +72,9 @@ class QSecVM(
                 vm.addFilterClass("com/tencent/mobileqq/dt/Dc")
                 vm.addFilterClass("com/tencent/mobileqq/dt/Dte")
             }
-        }.onFailure(logger::warning)
+        }.onFailure {
+            logger.warn("<init>", it)
+        }
     }
 
     fun init() {
@@ -87,7 +89,7 @@ class QSecVM(
             global["DeepSleepDetector"] = DeepSleepDetector()
             this.isInit = true
         }.onFailure {
-            logger.warning(it)
+            logger.warn("init", it)
             exitProcess(1)
         }
     }

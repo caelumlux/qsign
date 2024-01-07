@@ -14,7 +14,7 @@ import moe.fuqiuluo.unidbg.env.files.fetchCpuInfo
 import moe.fuqiuluo.unidbg.env.files.fetchMemInfo
 import moe.fuqiuluo.unidbg.env.files.fetchStat
 import moe.fuqiuluo.unidbg.env.files.fetchStatus
-import net.mamoe.mirai.utils.MiraiLogger
+import org.slf4j.LoggerFactory
 import top.mrxiaom.qsign.CommonConfig
 import java.io.File
 import java.util.UUID
@@ -26,7 +26,7 @@ class FileResolver(
     private val tmpFilePath = vm.coreLibPath
     private val uuid = UUID.randomUUID()
     companion object {
-        val logger = MiraiLogger.Factory.create(FileResolver::class)
+        val logger = LoggerFactory.getLogger("FileResolver")
 
         fun getAppInstallFolder(packageName: String): String {
             return CommonConfig.appInstallFolder.replace("\${packageName}", packageName)
@@ -252,7 +252,7 @@ class FileResolver(
         }
 
 
-        logger.warning("Couldn't find file: $path")
+        logger.warn("Couldn't find file: $path")
         return def
     }
 }

@@ -1,6 +1,6 @@
 package moe.fuqiuluo.unidbg.vm
 
-import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
+import CONFIG
 import com.github.unidbg.arm.backend.DynarmicFactory
 import com.github.unidbg.arm.backend.KvmFactory
 import com.github.unidbg.arm.backend.Unicorn2Factory

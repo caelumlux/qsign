@@ -1,11 +1,12 @@
 package top.mrxiaom.qsign
 
+import CONFIG
+import BASE_PATH
 import com.tencent.mobileqq.channel.SsoPacket
 import com.tencent.mobileqq.dt.model.FEBound
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
-import moe.fuqiuluo.api.SessionNotFoundError
 import moe.fuqiuluo.api.UnidbgFetchQSign
 import moe.fuqiuluo.comm.QSignConfig
 import moe.fuqiuluo.comm.checkIllegal
@@ -185,8 +186,7 @@ class QSignService(
         companion object {
             @JvmField
             var supportedProtocol: MutableSet<BotConfiguration.MiraiProtocol> = mutableSetOf()
-            lateinit var basePath: File
-            lateinit var CONFIG: QSignConfig
+
             @JvmField
             var cmdWhiteList: List<String> = this::class.java.classLoader
                 .getResourceAsStream("cmd_whitelist.txt")
@@ -201,7 +201,7 @@ class QSignService(
             }
             @JvmStatic
             fun init(basePath: File): Int {
-                this.basePath = basePath
+                BASE_PATH = basePath
 
                 when {
                     !basePath.exists() -> FileNotFoundException("设定的签名服务目录不存在")
@@ -213,14 +213,14 @@ class QSignService(
                     else -> null
                 }?.also { throw it }
 
-                FEBound.initAssertConfig(Factory.basePath)
+                FEBound.initAssertConfig(BASE_PATH)
                 val sum = FEBound.checkCurrent()
                 loadConfigFromFile(basePath.resolve("config.json"))
                 return sum
             }
             @JvmStatic
             fun loadProtocols(dir: File? = null) {
-                val basePath = dir ?: this.basePath
+                val basePath = dir ?: BASE_PATH
                 for (protocol in BotConfiguration.MiraiProtocol.values()) {
                     val file = basePath.listFiles { it ->
                         it.name.equals("$protocol.json", true)
@@ -239,6 +239,7 @@ class QSignService(
 
             @JvmStatic
             fun loadConfigFromFile(file: File) {
+                CONFIG
                 CONFIG = json.decodeFromString(
                     QSignConfig.serializer(),
                     file.readText()

@@ -5,7 +5,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
-import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
+import CONFIG
 
 @Serializable
 data class Server(

@@ -10,7 +10,7 @@ import net.mamoe.mirai.console.plugin.version
 import net.mamoe.mirai.event.events.BotOfflineEvent
 import net.mamoe.mirai.event.globalEventChannel
 import top.mrxiaom.qsign.QSignService.Factory
-import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
+import CONFIG
 import java.io.File
 import kotlin.system.exitProcess
 

@@ -14,18 +14,17 @@ import moe.fuqiuluo.comm.EnvData
 import moe.fuqiuluo.ext.toHexString
 import moe.fuqiuluo.unidbg.QSecVM
 import moe.fuqiuluo.unidbg.vm.GlobalData
-import net.mamoe.mirai.utils.MiraiLogger
-import net.mamoe.mirai.utils.getRandomIntString
 import top.mrxiaom.qsign.CommonConfig
-import top.mrxiaom.qsign.QSignService
-import top.mrxiaom.qsign.QSignService.Factory.Companion.CONFIG
+import BASE_PATH
+import CONFIG
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.security.SecureRandom
 import java.util.*
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-private val logger = MiraiLogger.Factory.create(QSecJni::class.java)
+private val logger = LoggerFactory.getLogger("QSecJni")
 
 typealias BytesObject = com.github.unidbg.linux.android.dvm.array.ByteArray
 
@@ -60,13 +59,13 @@ class QSecJni(
         if (signature == "com/tencent/mobileqq/fe/IFEKitLog->i(Ljava/lang/String;ILjava/lang/String;)V") {
             val tag = vaList.getObjectArg<StringObject>(0)
             val msg = vaList.getObjectArg<StringObject>(2)
-            logger.verbose(tag.value + "info: " + msg.value)
+            logger.trace(tag.value + "info: " + msg.value)
             return
         }
         if (signature == "com/tencent/mobileqq/fe/IFEKitLog->e(Ljava/lang/String;ILjava/lang/String;)V") {
             val tag = vaList.getObjectArg<StringObject>(0)
             val msg = vaList.getObjectArg<StringObject>(2)
-            logger.verbose(tag.value + "error: " + msg.value)
+            logger.trace(tag.value + "error: " + msg.value)
             return
         }
         if (signature == "com/tencent/mobileqq/channel/ChannelProxy->sendMessage(Ljava/lang/String;[BJ)V") {
@@ -77,7 +76,7 @@ class QSecJni(
 
             if (callbackId == -1L) return
 
-            logger.verbose("uin = ${global["uin"]}, id = $callbackId, sendPacket(cmd = $cmd, data = $hex)")
+            logger.trace("uin = ${global["uin"]}, id = $callbackId, sendPacket(cmd = $cmd, data = $hex)")
             (global["PACKET"] as ArrayList<SsoPacket>).add(SsoPacket(cmd, hex, callbackId))
             (global["mutex"] as Mutex).also { if (it.isLocked) it.unlock() }
             return
@@ -192,7 +191,7 @@ class QSecJni(
             val data = vaList.getObjectArg<DvmObject<*>>(1).value as ByteArray
             val result = FEBound.transform(mode, data)
             if (mode == 1)
-                logger.verbose("FEBound.transform(${data.toHexString()}) => ${result?.toHexString()}")
+                logger.trace("FEBound.transform(${data.toHexString()}) => ${result?.toHexString()}")
             return BytesObject(vm, result)
         }
         if (signature == "java/lang/ClassLoader->getSystemClassLoader()Ljava/lang/ClassLoader;") {
@@ -236,7 +235,7 @@ class QSecJni(
                     "ro.build.flavor" -> "missi_phoneext4_cn-user"
                     "ro.config.ringtone" -> "Ring_Synth_04.ogg"
                     else -> {
-                        logger.warning("Not support prop:$key, return -1")
+                        logger.warn("Not support prop:$key, return -1")
                         "-1"
                     }
                 }
@@ -247,7 +246,7 @@ class QSecJni(
                 vm, when (val key = vaList.getObjectArg<StringObject>(0).value) {
                     "empty" -> this.vm.envData.version
                     else -> {
-                        logger.warning("Not support getAppVersionName:$key, return -1")
+                        logger.warn("Not support getAppVersionName:$key, return -1")
                         "-1"
                     }
                 }
@@ -258,7 +257,7 @@ class QSecJni(
                 vm, when (val key = vaList.getObjectArg<StringObject>(0).value) {
                     "empty" -> this.vm.envData.code
                     else -> {
-                        logger.warning("Not support getAppVersionCode:$key, return -1")
+                        logger.warn("Not support getAppVersionCode:$key, return -1")
                         "-1"
                     }
                 }
@@ -266,7 +265,7 @@ class QSecJni(
         }
         if (signature == "com/tencent/mobileqq/dt/app/Dtc->getAppInstallTime(Ljava/lang/String;)Ljava/lang/String;") {
             return StringObject(
-                vm, File(QSignService.Factory.basePath, "config.json").lastModified().toString()
+                vm, File(BASE_PATH, "config.json").lastModified().toString()
             )
         }
         if (
@@ -295,7 +294,7 @@ class QSecJni(
                     "java.runtime.version" -> "0.9"
                     "java.boot.class.path" -> "/system/framework/core-oj.jar:/system/framework/core-libart.jar:/system/framework/conscrypt.jar:/system/frameworkhttp.jar:/system/framework/bouncycastle.jar:/system/framework/apache-xml.jar:/system/framework/legacy-test.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/telephony-common.jar:/system/frameworkoip-common.jar:/system/framework/ims-common.jar:/system/framework/org.apache.http.legacy.boot.jar:/system/framework/android.hidl.base-V1.0-java.jar:/system/framework/android.hidl.manager-V1.0-java.jar:/system/framework/mediatek-common.jar:/system/framework/mediatek-framework.jar:/system/framework/mediatek-telephony-common.jar:/system/framework/mediatek-telephony-base.jar:/system/framework/mediatek-ims-common.jar:/system/framework/mediatek-telecom-common.jar:/system/framework/mediatek-cta.jar"
                     else -> {
-                        logger.warning("Not support systemGetSafe:$key, return -1")
+                        logger.warn("Not support systemGetSafe:$key, return -1")
                         "-1"
                     }
                 }
@@ -360,7 +359,7 @@ class QSecJni(
                 89 -> System.currentTimeMillis().toString()
                 in 90 .. 105 -> "0"
                 else -> {
-                    logger.warning("不支持的QSecEstInfo ID: $id, 已返回0")
+                    logger.warn("不支持的QSecEstInfo ID: $id, 已返回0")
                     "0"
                 }
             })
@@ -377,6 +376,16 @@ class QSecJni(
         return super.callStaticObjectMethodV(vm, dvmClass, signature, vaList)
     }
 
+    /**
+     * 根据所给 [charRanges] 随机生成长度为 [length] 的 [String].
+     */
+    public fun getRandomString(length: Int, vararg charRanges: CharRange, random: Random = Random): String =
+        CharArray(length) { charRanges[random.nextInt(0..charRanges.lastIndex)].random(random) }.concatToString()
+
+
+    public fun getRandomIntString(length: Int, random: Random = Random): String =
+        getRandomString(length, charRanges = intCharRanges, random = random)
+    private val intCharRanges: Array<CharRange> = arrayOf('0'..'9')
     override fun callStaticIntMethodV(vm: BaseVM?, dvmClass: DvmClass?, signature: String?, vaList: VaList?): Int {
         if ("com/tencent/secprotocol/t/s->e(Landroid/content/Context;)I" == signature) {
             return when (envData.version) {
