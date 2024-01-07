@@ -11,6 +11,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.22"
     id("net.mamoe.mirai-console") version "2.16.0"
     id("com.github.gmazzo.buildconfig") version "3.1.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2" apply false
 }
 
 group = "top.mrxiaom"
@@ -19,6 +20,11 @@ findProperty("dev.sha")?.also {
     version = "$version-dev-$it"
 }
 val versionUnidbgFetchQSign = "Null"
+
+subprojects {
+    group = rootProject.group
+    version = rootProject.version
+}
 
 buildConfig {
     className("BuildConstants")
