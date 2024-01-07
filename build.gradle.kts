@@ -15,11 +15,11 @@ plugins {
 }
 
 group = "top.mrxiaom"
-version = "1.2.1-beta"
+version = "1.3.0"
 findProperty("dev.sha")?.also {
     version = "$version-dev-$it"
 }
-val versionUnidbgFetchQSign = "Null"
+val versionUnidbgFetchQSign = "Cat"
 
 subprojects {
     group = rootProject.group

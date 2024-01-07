@@ -36,13 +36,9 @@ jobs:
           name: qsign-${{ env.SHORT_SHA }}-all
           path: qsign-*-all.zip
           if-no-files-found: error
-      - name: Upload to Release
-        if: ${{ vars.NEED_TO_UPLOAD_RELEASE }}
-        uses: ncipollo/release-action@v1
+      - name: Upload Artifacts Http
+        uses: actions/upload-artifact@v3
         with:
-          artifacts: "qsign-*-all.zip"
-          allowUpdates: true
-          omitNameDuringUpdate: true
-          omitBodyDuringUpdate: true
-          tag: ${{ vars.UPLOAD_RELEASE_TAG }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          name: http-${{ env.SHORT_SHA }}
+          path: http/build/distributions/*.zip
+          if-no-files-found: error
