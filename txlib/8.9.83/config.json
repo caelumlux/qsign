@@ -3,8 +3,6 @@
     "host": "0.0.0.0",
     "port": 8080
   },
-  "share_token": true,
-  "count": 1,
   "key": "114514",
   "auto_register": true,
   "protocol": {
@@ -15,8 +13,10 @@
   },
   "unidbg": {
     "dynarmic": true,
-    "unicorn": false,
-    "kvm": false,
+    "unicorn": true,
     "debug": false
-  }
+  },
+  "black_list": [
+    1008611
+  ]
 }
