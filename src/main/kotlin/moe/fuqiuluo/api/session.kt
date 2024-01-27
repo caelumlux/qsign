@@ -20,6 +20,5 @@ fun findSession(uin: Long): Session {
 
 internal inline fun <T> Session.withRuntime(crossinline action: () -> T): T? {
     val t = action()
-    pool.release(this)
     return t
 }
