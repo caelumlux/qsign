@@ -20,6 +20,9 @@ object FEKit {
         QQSecuritySign.initSafeMode(vm, false)
         QQSecuritySign.dispatchEvent(vm, "Kicked", uin)
 
+        ChannelManager.setChannelProxy(vm, vm.newInstance("com/tencent/mobileqq/channel/ChannelProxy"))
+        ChannelManager.initReport(vm, vm.envData.qua, "6.100.248") // TODO(maybe check?)
+
         val context = (vm.vm as BaseVM).resolveClass("android/content/Context", vm.vm.resolveClass("java/io/File")).newObject(null)
 
         Dtn.initContext(vm, context)
@@ -29,8 +32,6 @@ object FEKit {
 
         QSec.doSomething(vm, context)
 
-        ChannelManager.setChannelProxy(vm, vm.newInstance("com/tencent/mobileqq/channel/ChannelProxy"))
-        ChannelManager.initReport(vm, vm.envData.qua, "6.100.248") // TODO(maybe check?)
     }
 
     fun changeUin(vm: QSecVM, uin: String) {

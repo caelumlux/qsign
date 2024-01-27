@@ -10,13 +10,13 @@ import java.util.concurrent.TimeUnit
 import kotlin.concurrent.timer
 
 object SessionManager {
-    private var workerPoolMap = hashMapOf<Long, WorkerPool>()
+    private var workerPoolMap = hashMapOf<String, WorkerPool>()
     private val envDataByUin = ConcurrentHashMap<Long, EnvData>()
-
+    private val uin0 ="0";
     init {
         if (CONFIG.shareToken) {
             timer("reload", false, 1000L * 60 * 40, 1000L * 60 * 40) {
-                workerPoolMap[0]?.close()
+                workerPoolMap[uin0]?.close()
             }
         }
     }
@@ -28,7 +28,7 @@ object SessionManager {
 
         if (CONFIG.shareToken) {
             val envData = envDataByUin[uin]!!
-            return workerPoolMap[0]?.borrow<Session?>(60 * 1000L, TimeUnit.MILLISECONDS).also {
+            return workerPoolMap[uin.toString()]?.borrow<Session?>(3 * 1000L, TimeUnit.MILLISECONDS).also {
                 val env = it?.vm?.envData
                 if (env != null && env.uin != uin) {
                     env.uin = uin
@@ -42,7 +42,7 @@ object SessionManager {
                 }
             }
         } else {
-            return workerPoolMap[uin]?.borrow(60 * 1000L, TimeUnit.MILLISECONDS)
+            return workerPoolMap[uin.toString()]?.borrow(3 * 1000L, TimeUnit.MILLISECONDS)
         }
     }
 
@@ -57,10 +57,10 @@ object SessionManager {
         }
 
         envDataByUin[envData.uin] = envData
-        if(workerPoolMap.containsKey(0) && CONFIG.shareToken) {
+        if(workerPoolMap.containsKey(uin0) && CONFIG.shareToken) {
            return
         }
-        workerPoolMap[if (CONFIG.shareToken) 0 else envData.uin] = WorkerPoolFactory.create({ pool ->
+        workerPoolMap[if (CONFIG.shareToken) uin0 else envData.uin.toString()] = WorkerPoolFactory.create({ pool ->
             Session(envData, pool)
         }, CONFIG.count)
     }
@@ -68,7 +68,7 @@ object SessionManager {
     fun close(uin: Long) {
         envDataByUin.remove(uin)
         if (!CONFIG.shareToken) {
-            workerPoolMap[uin]?.close()
+            workerPoolMap[uin.toString()]?.close()
         }
     }
 }
